@@ -15,13 +15,16 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class FavoriteAdapter(
-    private val favoriteWeatherPlaces: List<FavoriteWeatherPlacesModel>,
+    private var favoriteWeatherPlaces: List<FavoriteWeatherPlacesModel>,
+    var deleteAction: (FavoriteWeatherPlacesModel) -> Unit,
     var listener: (FavoriteWeatherPlacesModel) -> Unit
 ) :
     RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
     private lateinit var binding: FavItemBinding
 
+
     class ViewHolder(var binding: FavItemBinding) : RecyclerView.ViewHolder(binding.root)
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -33,12 +36,14 @@ class FavoriteAdapter(
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
+        var current = favoriteWeatherPlaces[position]
         holder.binding.FavoritePlaceName.text = favoriteWeatherPlaces[position].locationName
         holder.binding.deleteFromFav.setOnClickListener {
-            favoriteWeatherPlaces[position]?.let { it -> listener(it) }
+            deleteAction(current)
         }
-
+        holder.binding.itemView.setOnClickListener {
+            listener(current)
+        }
     }
 
 }

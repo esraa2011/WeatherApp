@@ -20,7 +20,7 @@ abstract class AppDataBase : RoomDatabase() {
         private var INSTANCE: AppDataBase? = null
 
         @Synchronized
-        fun getInstance(context: Context): AppDataBase? {
+        fun getInstance(context: Context): AppDataBase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext, AppDataBase::class.java, "FavoritePlaces_database"

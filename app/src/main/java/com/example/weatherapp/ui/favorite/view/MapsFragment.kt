@@ -66,6 +66,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     lateinit var factoryViewModel: FavoriteFactoryViewModel
     lateinit var favoriteViewModel: FavoriteViewModel
+
     //private lateinit var streetName: String
     val PERMISSION_ID = 10
 
@@ -218,7 +219,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                     .title("My Location")
             )
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11f))
 
             mMap.setOnMapLongClickListener { latLng ->
 
@@ -228,7 +229,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                 val geoCoder = Geocoder(requireContext())
                 val address = geoCoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
                 var favoriteWeatherPlacesModel = FavoriteWeatherPlacesModel(
-                    address?.get(0)?.countryName.toString(), latLng.latitude, latLng.longitude
+                    address?.get(0)?.adminArea.toString(), latLng.latitude, latLng.longitude
                 )
                 checkSaveToFavorite(
                     favoriteWeatherPlacesModel,
@@ -248,9 +249,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         alert.setTitle("Favorite")
         alert.setMessage("Do You want to save ${placeName} on favorite")
         alert.setPositiveButton("Save") { _: DialogInterface, _: Int ->
-            favoriteViewModel.getAllFavoritePlaces()
-            favoriteViewModel.insertFavoriteWeather(favoriteWeatherPlacesModel)
 
+            favoriteViewModel.insertFavoriteWeather(favoriteWeatherPlacesModel)
+            favoriteViewModel.getAllFavoritePlaces()
             Toast.makeText(requireContext(), "Data has been saved", Toast.LENGTH_SHORT).show()
 
         }

@@ -1,23 +1,32 @@
 package com.example.weatherapp.ui.favorite.view
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FavoriteFragmentBinding
 import com.example.weatherapp.models.Current
 import com.example.weatherapp.models.FavoriteWeatherPlacesModel
 import com.example.weatherapp.repo.Repository
+import com.example.weatherapp.ui.favorite.viewModel.ApiState
 
 
 import com.example.weatherapp.ui.favorite.viewModel.FavoriteViewModel
+import com.example.weatherapp.ui.home.view.HomeFactoryViewModel
 import com.example.weatherapp.ui.home.view.HoursAdapter
+import com.example.weatherapp.ui.home.viewModel.HomeViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 
 class FavoriteFragment : Fragment() {
@@ -25,10 +34,13 @@ class FavoriteFragment : Fragment() {
     private var _binding: FavoriteFragmentBinding? = null
 
     private val binding get() = _binding!!
-    private lateinit var factoryViewModel: FavoriteFactoryViewModel
-    private lateinit var adapter: FavoriteAdapter
-    lateinit var favoriteWeatherPlaces: List<FavoriteWeatherPlacesModel>
+    lateinit var factoryViewModel: FavoriteFactoryViewModel
 
+
+    private lateinit var adapter: FavoriteAdapter
+
+
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,23 +59,46 @@ class FavoriteFragment : Fragment() {
         }
 
 
-        favoriteViewModel.getAllFavoritePlaces()
-        favoriteViewModel.favList.observe(viewLifecycleOwner) {
-            favoriteWeatherPlaces = it
-            adapter =
-                FavoriteAdapter(it){
-                  favoriteWeatherPlacesModel :FavoriteWeatherPlacesModel->
-                    favoriteViewModel.deleteFavoriteWeather(favoriteWeatherPlacesModel)
+        lifecycleScope.launchWhenStarted {
+            favoriteViewModel.favList.collectLatest {
+
+                when (it) {
+
+                    is ApiState.loading -> {
+
+                    }
+                    is ApiState.Success -> {
+
+                        adapter =
+                            FavoriteAdapter(it.data, { it ->
+                                favoriteViewModel.deleteFavoriteWeather(it)
+
+                            })
+                            { it ->
+                                favoriteViewModel.getAllFavoritePlacesDetails(it)
+                                val bundle = Bundle()
+                                bundle.putSerializable("favorite", it)
+                                Navigation.findNavController(root!!)
+                                    .navigate(
+                                        R.id.action_nav_favorite_to_favoritePlacesDetailsFragment,
+                                        bundle
+                                    )
+
+                            }
+
+                        binding.FavoriteRectcleView.adapter = adapter
+                        adapter.notifyDataSetChanged()
+                    }
+                    is ApiState.Failure -> {
+                        Toast.makeText(requireContext(), "error", Toast.LENGTH_LONG).show()
+                    }
+
                 }
-            favoriteViewModel.getAllFavoritePlaces()
-            binding.FavoriteRectcleView.adapter = adapter
 
+
+            }
         }
-        return root
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        return root
     }
 }

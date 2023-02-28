@@ -8,35 +8,31 @@ import com.example.weatherapp.models.Current
 import com.example.weatherapp.models.Daily
 import com.example.weatherapp.models.Root
 import com.example.weatherapp.repo.Repository
+import com.example.weatherapp.ui.favorite.viewModel.ApiState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class HomeViewModel(repository: Repository) : ViewModel() {
 
-
-    private var _dailyList = MutableLiveData<List<Daily>>()
-    val dailyList: LiveData<List<Daily>> = _dailyList
-
-    private var _hours = MutableLiveData<List<Current>>()
-    val hours: LiveData<List<Current>> = _hours
-
-    private var _currentList = MutableLiveData<Current>()
-    val currentList: LiveData<Current> = _currentList
-
+    private var _root =  MutableStateFlow<ApiStateRoot>(ApiStateRoot.loading)
+    val root= _root.asStateFlow()
 
     init {
 
         viewModelScope.launch(Dispatchers.IO) {
-            _dailyList.postValue(repository.getWeather()?.daily)
-            _hours.postValue(repository.getWeather()?.hourly)
-            _currentList.postValue(repository.getWeather()?.current)
-
+        repository.getWeather()?.catch {
+            e->
+            _root.value=ApiStateRoot.Failure(e)
+        }
+            ?.collect{
+                _root.value=ApiStateRoot.Success(it)
+            }
         }
     }
 
-    private val _text = MutableLiveData<String>().apply {
-        value = _dailyList.value?.get(0)?.temp.toString()
-    }
-    val text: LiveData<String> = _text
+
 }
 

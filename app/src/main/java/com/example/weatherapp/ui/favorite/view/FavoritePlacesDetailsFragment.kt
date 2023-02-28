@@ -1,64 +1,84 @@
-package com.example.weatherapp.ui.home.view
+package com.example.weatherapp.ui.favorite.view
 
-import android.annotation.SuppressLint
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.weatherapp.R
+import com.example.weatherapp.databinding.FragmentFavoritePlacesDetailsBinding
 import com.example.weatherapp.databinding.FragmentHomeBinding
 import com.example.weatherapp.models.Current
 import com.example.weatherapp.models.Daily
+import com.example.weatherapp.models.FavoriteWeatherPlacesModel
 import com.example.weatherapp.repo.Repository
+import com.example.weatherapp.ui.favorite.viewModel.FavoriteViewModel
+import com.example.weatherapp.ui.home.view.DailyAdapter
+import com.example.weatherapp.ui.home.view.HoursAdapter
+import com.example.weatherapp.ui.home.view.Utility
 import com.example.weatherapp.ui.home.viewModel.ApiStateRoot
-
-import com.example.weatherapp.ui.home.viewModel.HomeViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
-class HomeFragment : Fragment() {
-
-    private var _binding: FragmentHomeBinding? = null
+class FavoritePlacesDetailsFragment : Fragment() {
+    lateinit var factoryViewModel: FavoriteFactoryViewModel
     private val binding get() = _binding!!
     lateinit var daily: List<Daily>
     lateinit var hours: List<Current>
     lateinit var dailyAdapter: DailyAdapter
     lateinit var hoursAdapter: HoursAdapter
-    lateinit var factoryViewModel: HomeFactoryViewModel
+    private var _binding: FragmentFavoritePlacesDetailsBinding? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
-    @SuppressLint("SetTextI18n")
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        factoryViewModel = HomeFactoryViewModel(Repository(requireContext()))
-        val homeViewModel =
-            ViewModelProvider(this, factoryViewModel).get(HomeViewModel::class.java)
-
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+    ): View? {
+        factoryViewModel = FavoriteFactoryViewModel(Repository(requireContext()))
+        val favoriteViewModel =
+            ViewModelProvider(this, factoryViewModel).get(FavoriteViewModel::class.java)
+        _binding = FragmentFavoritePlacesDetailsBinding.inflate(inflater, container, false)
         val root: View = binding.root
-//        homeViewModel.dailyList.observe(viewLifecycleOwner) {
+        arguments?.let {
+            var favorite = it.getSerializable("favorite")
+            println("Place ${favorite}")
+            favoriteViewModel.getAllFavoritePlacesDetails(favorite as FavoriteWeatherPlacesModel)
+        }
+
+//        favoriteViewModel.dailyList.observe(viewLifecycleOwner) {
 //            daily = it
 //            dailyAdapter =
 //                DailyAdapter(daily as List<Daily>)
 //            binding.homeRecycleDaily.adapter = dailyAdapter
 //
 //        }
-//        homeViewModel.hours.observe(viewLifecycleOwner) {
+//        favoriteViewModel.hours.observe(viewLifecycleOwner) {
 //            hours = it
 //            hoursAdapter =
 //                HoursAdapter(hours as List<Current>)
 //            binding.homeRecycleHours.adapter = hoursAdapter
 //
 //        }
+//        favoriteViewModel.currentList.observe(viewLifecycleOwner) {
+//            binding.pressureMeasure.text = it.pressure.toString()
+//            binding.humidityMeasure.text = it.humidity.toString()
+//            binding.cloudMeasure.text = it.clouds.toString()
+//            binding.visibilityMeasure.text = it.visibility.toString()
+//            binding.windMeasure.text = it.windSpeed.toString()
+//            binding.violateMeasure.text = it.uvi.toString()
+//            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(it.weather[0].icon))
+//            binding.todayWeather.text =
+//                "${it.temp.toInt()} °C"
+//            binding.todayWeatherStatus.text = it.weather[0].description
+//        }
+
         lifecycleScope.launch {
-            homeViewModel.root.collectLatest { result ->
+            favoriteViewModel.root.collectLatest { result ->
                 when (result) {
                     is ApiStateRoot.Success -> {
                         dailyAdapter =
@@ -86,20 +106,10 @@ class HomeFragment : Fragment() {
 
                     }
                 }
-
             }
         }
-
-
         return root
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }
+
+

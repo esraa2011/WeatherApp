@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_nav_favorite_to_mapsFragment"
             app:destination="@id/Nav_map" />
+        <action
+            android:id="@+id/action_nav_favorite_to_favoritePlacesDetailsFragment"
+            app:destination="@id/favoritePlacesDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/nav_alerts"
@@ -35,5 +38,13 @@
         android:name="com.example.weatherapp.ui.favorite.view.MapsFragment"
         android:label="Map"
         tools:layout="@layout/fragment_maps" />
+    <fragment
+        android:id="@+id/favoritePlacesDetailsFragment"
+        android:name="com.example.weatherapp.ui.favorite.view.FavoritePlacesDetailsFragment"
+        android:label="@string/Current_Weather" >
+        <argument
+            android:name="FavoritePlacesSerializable"
+            app:argType="com.example.weatherapp.models.FavoriteWeatherPlacesModel" />
+    </fragment>
 
 </navigation>

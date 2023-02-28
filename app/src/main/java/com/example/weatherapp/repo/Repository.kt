@@ -12,24 +12,39 @@ import com.example.weatherapp.models.FavoriteWeatherPlacesModel
 import com.example.weatherapp.models.Root
 import com.example.weatherapp.network.RetrofitHelper
 import com.example.weatherapp.network.RetrofitInterface
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 
 class Repository(private val context: Context) {
 
     private val apiObject: RetrofitInterface =
         RetrofitHelper.getInstance().create(RetrofitInterface::class.java)
 
-    suspend fun getRoot(): Root? =
+    suspend fun getRoot(): Flow<Root> = flow {
         apiObject.getCurrentTempData(32.0, 31.0, "bec88e8dd2446515300a492c3862a10e", "metric", "en")
-            .body()
+            .body().let {
+                if (it != null) {
+                    emit(it)
+                }
+            }
+    }
 
-    suspend fun getFavoriteWeather(favoriteWeatherPlacesModel: FavoriteWeatherPlacesModel): Root? =
-        apiObject.getCurrentTempData(
-            favoriteWeatherPlacesModel.lat,
-            favoriteWeatherPlacesModel.lon,
-            "bec88e8dd2446515300a492c3862a10e",
-            "metric",
-            "en"
-        ).body()
+    suspend fun getFavoriteWeather(favoriteWeatherPlacesModel: FavoriteWeatherPlacesModel): Flow<Root> =
+        flow {
+            apiObject.getCurrentTempData(
+                favoriteWeatherPlacesModel.lat,
+                favoriteWeatherPlacesModel.lon,
+                "bec88e8dd2446515300a492c3862a10e",
+                "metric",
+                "en"
+            ).body().let {
+                if (it != null) {
+                    emit(it)
+                }
+            }
+
+        }
 
     suspend fun insertFavoritePlaces(favoriteWeatherPlacesModel: FavoriteWeatherPlacesModel) {
         AppDataBase.getInstance(context)?.favoriteWeatherPlacesDAO()
@@ -41,13 +56,15 @@ class Repository(private val context: Context) {
             ?.deletePlaceFromFavorite(favoriteWeatherPlacesModel)
     }
 
-    suspend fun getCurrentWeather(): Root? =
+    fun getCurrentWeather() =
         AppDataBase.getInstance(context)?.weatherDAO()?.getLastWeather()
 
-    suspend fun getFavoritePlaces(): List<FavoriteWeatherPlacesModel>? =
-        AppDataBase.getInstance(context)?.favoriteWeatherPlacesDAO()?.getAllFavoriteWeatherPlaces()
+    fun getFavoritePlaces() =
+        AppDataBase.getInstance(context).favoriteWeatherPlacesDAO()
+            .getAllFavoriteWeatherPlaces()
 
-    suspend fun insertCurrentWeather(root: Root) {
+
+    fun insertCurrentWeather(root: Root) {
         AppDataBase.getInstance(context)?.weatherDAO()?.insertLastWeather(root)
     }
 
@@ -75,13 +92,17 @@ class Repository(private val context: Context) {
         }
     }
 
-    suspend fun getWeather(): Root? = if (checkForInternet(context)) {
+    suspend fun getWeather() = if (checkForInternet(context)) {
         getRoot().also {
             deleteCurrentWeather()
 
-            if (it != null) {
-                insertCurrentWeather(it)
+            it.collect {
+                if (it != null) {
+                    insertCurrentWeather(it)
+                }
             }
+
+
         }
     } else {
         getCurrentWeather()
