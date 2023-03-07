@@ -66,7 +66,6 @@ class Repository(private val context: Context) {
 
         updateSharedPreferance()
         if (location == Utility.GPS) {
-            Log.i("esraa", "getRoot: 1234")
             apiObject.getCurrentTempData(
                 latLng.latitude,
                 latLng.longitude,

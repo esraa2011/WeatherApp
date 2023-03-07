@@ -48,6 +48,7 @@ class HomeFragment : Fragment() {
     lateinit var unit: String
     val PERMISSION_ID = 10
     lateinit var homeViewModel: HomeViewModel
+    var flagFirstEnter:Boolean=true
     // var latLng = LatLng( 0.0,  0.0)
 
 
@@ -267,16 +268,18 @@ class HomeFragment : Fragment() {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun requestPermission() {
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf<String>(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ),
-            PERMISSION_ID
-        )
-    }
+
+private fun requestPermission() {
+    Log.i("per", "requestPermission: ")
+
+    requestPermissions(
+        arrayOf<String>(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ),
+        PERMISSION_ID
+    )
+}
 
     @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
@@ -287,7 +290,8 @@ class HomeFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_ID) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // getLastMLocation()
+                Log.i("mloc", "onLocationResult: first")
+                getLastMLocation()
             }
         }
     }
@@ -301,8 +305,10 @@ class HomeFragment : Fragment() {
 
     @SuppressLint("MissingPermission")
     private fun getLastMLocation() {
+        Log.i("mloc", "onLocationResult: theard")
         if (checkPermission()) {
             if (isLocationEnabled()) {
+
                 requestNewLocationData()
             } else {
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
@@ -315,6 +321,7 @@ class HomeFragment : Fragment() {
 
     @SuppressLint("MissingPermission")
     private fun requestNewLocationData() {
+        Log.i("mloc", "onLocationResult: second")
         val mLocationRequest = LocationRequest()
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
         mLocationRequest.setInterval(200000)
@@ -328,7 +335,8 @@ class HomeFragment : Fragment() {
 
     private val mLocationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-            super.onLocationResult(locationResult)
+          //  super.onLocationResult(locationResult)
+            mFusedLocationClient.removeLocationUpdates(this)
 
             var mLastLocation: Location? = locationResult.getLastLocation()
             var latLng = LatLng(mLastLocation?.latitude ?: 0.0, mLastLocation?.longitude ?: 0.0)
