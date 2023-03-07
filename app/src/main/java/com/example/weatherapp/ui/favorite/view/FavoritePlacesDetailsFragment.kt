@@ -1,24 +1,28 @@
 package com.example.weatherapp.ui.favorite.view
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentFavoritePlacesDetailsBinding
-import com.example.weatherapp.databinding.FragmentHomeBinding
-import com.example.weatherapp.models.Current
-import com.example.weatherapp.models.Daily
 import com.example.weatherapp.models.FavoriteWeatherPlacesModel
 import com.example.weatherapp.repo.Repository
+import com.example.weatherapp.ui.favorite.viewModel.FavoriteFactoryViewModel
 import com.example.weatherapp.ui.favorite.viewModel.FavoriteViewModel
 import com.example.weatherapp.ui.home.view.DailyAdapter
 import com.example.weatherapp.ui.home.view.HoursAdapter
-import com.example.weatherapp.ui.home.view.Utility
+import com.example.weatherapp.models.Utility
 import com.example.weatherapp.ui.home.viewModel.ApiStateRoot
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -26,11 +30,15 @@ import kotlinx.coroutines.launch
 class FavoritePlacesDetailsFragment : Fragment() {
     lateinit var factoryViewModel: FavoriteFactoryViewModel
     private val binding get() = _binding!!
-    lateinit var daily: List<Daily>
-    lateinit var hours: List<Current>
     lateinit var dailyAdapter: DailyAdapter
     lateinit var hoursAdapter: HoursAdapter
     private var _binding: FragmentFavoritePlacesDetailsBinding? = null
+    lateinit var sharedPreferences: SharedPreferences
+    lateinit var languageShared: SharedPreferences
+    lateinit var unitsShared: SharedPreferences
+    lateinit var lang: String
+    lateinit var unit: String
+    lateinit var favorite: FavoriteWeatherPlacesModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -45,62 +53,177 @@ class FavoritePlacesDetailsFragment : Fragment() {
         _binding = FragmentFavoritePlacesDetailsBinding.inflate(inflater, container, false)
         val root: View = binding.root
         arguments?.let {
-            var favorite = it.getSerializable("favorite")
-            println("Place ${favorite}")
+            favorite = it.getSerializable("favorite") as FavoriteWeatherPlacesModel
             favoriteViewModel.getAllFavoritePlacesDetails(favorite as FavoriteWeatherPlacesModel)
+            languageShared = requireContext().getSharedPreferences("Language", Context.MODE_PRIVATE)
+            unitsShared =
+                requireContext().getSharedPreferences("Units", AppCompatActivity.MODE_PRIVATE)
+            lang = languageShared.getString(Utility.Language_Key, "en")!!
+            unit = unitsShared.getString(Utility.TEMP_KEY, "metric")!!
         }
-
-//        favoriteViewModel.dailyList.observe(viewLifecycleOwner) {
-//            daily = it
-//            dailyAdapter =
-//                DailyAdapter(daily as List<Daily>)
-//            binding.homeRecycleDaily.adapter = dailyAdapter
-//
-//        }
-//        favoriteViewModel.hours.observe(viewLifecycleOwner) {
-//            hours = it
-//            hoursAdapter =
-//                HoursAdapter(hours as List<Current>)
-//            binding.homeRecycleHours.adapter = hoursAdapter
-//
-//        }
-//        favoriteViewModel.currentList.observe(viewLifecycleOwner) {
-//            binding.pressureMeasure.text = it.pressure.toString()
-//            binding.humidityMeasure.text = it.humidity.toString()
-//            binding.cloudMeasure.text = it.clouds.toString()
-//            binding.visibilityMeasure.text = it.visibility.toString()
-//            binding.windMeasure.text = it.windSpeed.toString()
-//            binding.violateMeasure.text = it.uvi.toString()
-//            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(it.weather[0].icon))
-//            binding.todayWeather.text =
-//                "${it.temp.toInt()} °C"
-//            binding.todayWeatherStatus.text = it.weather[0].description
-//        }
-
+        favoriteViewModel.getAllFavoritePlacesDetails(favorite)
         lifecycleScope.launch {
             favoriteViewModel.root.collectLatest { result ->
                 when (result) {
                     is ApiStateRoot.Success -> {
+//                        dailyAdapter =
+//                            DailyAdapter(result.data.daily, requireContext())
+//                        binding.homeRecycleDaily.adapter = dailyAdapter
+//                        binding.pressureMeasure.text = result.data.current.pressure.toString()
+//                        binding.humidityMeasure.text = result.data.current.humidity.toString()
+//                        binding.cloudMeasure.text = result.data.current.clouds.toString()
+//                        binding.visibilityMeasure.text = result.data.current.visibility.toString()
+//                        binding.windMeasure.text = result.data.current.windSpeed.toString()
+//                        binding.violateMeasure.text = result.data.current.uvi.toString()
+//                        binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current.weather[0].icon))
+//                        binding.todayWeather.text =
+//                            "${result.data.current.temp.toInt()} °C"
+//                        binding.todayWeatherStatus.text = result.data.current.weather[0].description
+//
+//                        hoursAdapter =
+//                            HoursAdapter(result.data.hourly, requireContext())
+//                        binding.homeRecycleHours.adapter = hoursAdapter
+
                         dailyAdapter =
-                            DailyAdapter(result.data.daily)
+                            DailyAdapter(result.data.daily, requireContext())
                         binding.homeRecycleDaily.adapter = dailyAdapter
-                        binding.pressureMeasure.text = result.data.current.pressure.toString()
-                        binding.humidityMeasure.text = result.data.current.humidity.toString()
-                        binding.cloudMeasure.text = result.data.current.clouds.toString()
-                        binding.visibilityMeasure.text = result.data.current.visibility.toString()
-                        binding.windMeasure.text = result.data.current.windSpeed.toString()
-                        binding.violateMeasure.text = result.data.current.uvi.toString()
-                        binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current.weather[0].icon))
-                        binding.todayWeather.text =
-                            "${result.data.current.temp.toInt()} °C"
-                        binding.todayWeatherStatus.text = result.data.current.weather[0].description
 
                         hoursAdapter =
-                            HoursAdapter(result.data.hourly)
+                            HoursAdapter(result.data.hourly, requireContext())
                         binding.homeRecycleHours.adapter = hoursAdapter
+
+                        if (lang == "en" && unit == "metric") {
+                            binding.todayWeather.text =
+                                "${result.data.current.temp.toInt()} ℃"
+                            binding.pressureMeasure.text = "${result.data.current.pressure} hPa"
+                            binding.humidityMeasure.text =
+                                "${result.data.current.humidity} %"
+                            binding.windMeasure.text =
+                                "${result.data.current.windSpeed} m/s"
+                            binding.cloudMeasure.text =
+                                "${result.data.current.clouds} m"
+                            binding.violateMeasure.text =
+                                "${result.data.current.uvi} %"
+                            binding.visibilityMeasure.text =
+                                "${result.data.current.visibility} %"
+
+                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current.weather[0].icon))
+                            binding.todayWeatherStatus.text =
+                                result.data.current.weather[0].description
+
+                        } else if (lang == "ar" && unit == "metric") {
+                            binding.todayWeather.text =
+                                Utility.convertNumbersToArabic(result.data.current.temp.toInt()) + " س°"
+
+                            binding.pressureMeasure.text =
+                                Utility.convertNumbersToArabic(result.data.current.pressure) + "هـ ب أ"
+                            binding.humidityMeasure.text =
+                                "${Utility.convertNumbersToArabic(result.data.current.humidity)} %"
+                            binding.windMeasure.text =
+                                Utility.convertNumbersToArabic(result.data.current.windSpeed) + " م/ث "
+                            binding.cloudMeasure.text =
+                                Utility.convertNumbersToArabic(result.data.current.clouds) + " م "
+                            binding.violateMeasure.text =
+                                Utility.convertNumbersToArabic(result.data.current.uvi) + " %"
+                            binding.visibilityMeasure.text =
+                                Utility.convertNumbersToArabic(result.data.current.visibility) + " %"
+
+                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current.weather[0].icon))
+                            binding.todayWeatherStatus.text =
+                                result.data.current.weather[0].description
+
+                        } else if (lang == "ar" && unit == "imperial") {
+                            binding.todayWeather.text =
+                                Utility.convertNumbersToArabic(result.data.current.temp.toInt()) + "ف° "
+                            binding.pressureMeasure.text =
+                                Utility.convertNumbersToArabic(result.data.current.pressure) + "هـ ب أ"
+                            binding.humidityMeasure.text =
+                                "${Utility.convertNumbersToArabic(result.data.current.humidity)} %"
+                            binding.windMeasure.text =
+                                Utility.convertNumbersToArabic(result.data.current.windSpeed) + " كم/س "
+                            binding.cloudMeasure.text =
+                                Utility.convertNumbersToArabic(result.data.current.clouds) + " كم "
+                            binding.violateMeasure.text =
+                                Utility.convertNumbersToArabic(result.data.current.uvi) + " %"
+                            binding.visibilityMeasure.text =
+                                Utility.convertNumbersToArabic(result.data.current.visibility) + " %"
+                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current.weather[0].icon))
+                            binding.todayWeatherStatus.text =
+                                result.data.current.weather[0].description
+
+                        } else if (lang == "en" && unit == "imperial") {
+                            binding.todayWeather.text = "${result.data.current.temp.toInt()} ℉"
+                            binding.pressureMeasure.text = "${result.data.current.pressure} hPa"
+                            binding.humidityMeasure.text =
+                                "${result.data.current.humidity} %"
+                            binding.windMeasure.text =
+                                "${result.data.current.windSpeed}  km/h"
+                            binding.cloudMeasure.text =
+                                "${result.data.current.clouds} Km"
+                            binding.violateMeasure.text =
+                                "${result.data.current.uvi} %"
+                            binding.visibilityMeasure.text =
+                                "${result.data.current.visibility} %"
+
+                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current.weather[0].icon))
+                            binding.todayWeatherStatus.text =
+                                result.data.current.weather[0].description
+
+                        } else if (lang == "en" && unit == "standard") {
+                            binding.todayWeather.text = "${result.data.current.temp.toInt()} °K"
+                            binding.pressureMeasure.text = "${result.data.current.pressure} hPa"
+                            binding.humidityMeasure.text =
+                                "${result.data.current.humidity} %"
+                            binding.windMeasure.text =
+                                "${result.data.current.windSpeed}  m/s"
+                            binding.cloudMeasure.text =
+                                "${result.data.current.clouds} m"
+                            binding.violateMeasure.text =
+                                "${result.data.current.uvi} %"
+                            binding.visibilityMeasure.text =
+                                "${result.data.current.visibility} %"
+
+
+                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current.weather[0].icon))
+                            binding.todayWeatherStatus.text =
+                                result.data.current.weather[0].description
+
+                        } else if (lang == "ar" && unit == "standard") {
+                            binding.todayWeather.text =
+                                Utility.convertNumbersToArabic(result.data.current.temp.toInt()) + "ك°"
+
+                            binding.pressureMeasure.text =
+                                Utility.convertNumbersToArabic(result.data.current.pressure) + "هـ ب أ"
+                            binding.humidityMeasure.text =
+                                "${Utility.convertNumbersToArabic(result.data.current.humidity)} %"
+                            binding.windMeasure.text =
+                                Utility.convertNumbersToArabic(result.data.current.windSpeed) + " م/ث "
+                            binding.cloudMeasure.text =
+                                Utility.convertNumbersToArabic(result.data.current.clouds) + " م "
+                            binding.violateMeasure.text =
+                                Utility.convertNumbersToArabic(result.data.current.uvi) + " %"
+                            binding.visibilityMeasure.text =
+                                Utility.convertNumbersToArabic(result.data.current.visibility) + " %"
+
+                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current.weather[0].icon))
+                            binding.todayWeatherStatus.text =
+                                result.data.current.weather[0].description
+                        }
+
                     }
                     is ApiStateRoot.Failure -> {
-
+                        Snackbar.make(
+                            requireView(),
+                            getString(R.string.no_internet_txt),
+                            Snackbar.LENGTH_LONG
+                        )
+                            .setAction("Setting", View.OnClickListener {
+                                startActivityForResult(
+                                    Intent(
+                                        Settings.ACTION_SETTINGS
+                                    ), 0
+                                );
+                            }).show()
                     }
                     else -> {
 

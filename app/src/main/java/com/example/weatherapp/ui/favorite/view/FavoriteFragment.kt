@@ -1,31 +1,23 @@
 package com.example.weatherapp.ui.favorite.view
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FavoriteFragmentBinding
-import com.example.weatherapp.models.Current
-import com.example.weatherapp.models.FavoriteWeatherPlacesModel
 import com.example.weatherapp.repo.Repository
 import com.example.weatherapp.ui.favorite.viewModel.ApiState
+import com.example.weatherapp.ui.favorite.viewModel.FavoriteFactoryViewModel
 
 
 import com.example.weatherapp.ui.favorite.viewModel.FavoriteViewModel
-import com.example.weatherapp.ui.home.view.HomeFactoryViewModel
-import com.example.weatherapp.ui.home.view.HoursAdapter
-import com.example.weatherapp.ui.home.viewModel.HomeViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -57,13 +49,9 @@ class FavoriteFragment : Fragment() {
         binding.fabFav.setOnClickListener { view ->
             Navigation.findNavController(view).navigate(R.id.Nav_map)
         }
-
-
         lifecycleScope.launchWhenStarted {
             favoriteViewModel.favList.collectLatest {
-
                 when (it) {
-
                     is ApiState.loading -> {
 
                     }

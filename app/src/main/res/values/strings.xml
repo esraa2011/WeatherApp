@@ -8,21 +8,19 @@
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="favorite">Favorite</string>
-    <string name="alerts">Alerts</string>
     <string name="settings">Settings</string>
     <string name="Alerts">Alerts</string>
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
 
-    <!-- Messages Preferences -->
+
     <string name="signature_title">Your signature</string>
     <string name="reply_title">Default reply action</string>
 
-    <!-- Sync Preferences -->
+
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
@@ -40,9 +38,40 @@
     <string name="_2_06_m_s">2.06 m/s</string>
     <string name="visibility">visibility</string>
     <string name="ultra">ultra</string>
-    <string name="api_key">AIzaSyAbuHdF1hB_ddtCtgEZ7iE3cDqXk4zpVJU</string>
-    <string name="mansoura">Mansoura</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="api_key" translatable="false">AIzaSyAbuHdF1hB_ddtCtgEZ7iE3cDqXk4zpVJU</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="no_internet_txt">There is no  Internet Connection!</string>
+    <string name="language">Language</string>
+    <string name="english">English</string>
+    <string name="arabic">Arabic</string>
+    <string name="wind_speed">Wind Speed</string>
+    <string name="mile_hour">Mile / Hour</string>
+    <string name="meter_sec">Meter / Sec</string>
+    <string name="celsius">Celsius</string>
+    <string name="kelvin">Kelvin</string>
+    <string name="fahrenheit">Fahrenheit</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
+    <string name="map">Map</string>
+    <string name="change_to_en_txt">You changed Language to English</string>
+    <string name="change_to_ar_txt">You changed Language to Arabic</string>
+    <string name="gps">GPS</string>
     <string name="Current_Weather">Current Weather</string>
+    <string name="mansoura">Mansoura</string>
+    <string name="alerts">Alerts</string>
+    <string name="location">Location</string>
+    <string name="notification">Notification</string>
+    <string name="temperature">Temperature</string>
+    <string name="change_to_cel_txt">You changed Temperature to Celsius</string>
+    <string name="change_to_kelvin_txt">You changed Temperature to Kelvin</string>
+    <string name="change_to_feh_txt">You changed Temperature to Fahrenheit</string>
+    <string name="change_to_gps_txt">You changed Location to GPS</string>
+    <string name="change_to_map_txt">You changed Location to Map</string>
+    <string name="visibility_tv">Visibility</string>
+    <string name="violate">Violate</string>
+    <string name="measure">Measure</string>
+    <string name="wind">Wind</string>
+    <string name="humidity_tv">Humidity</string>
+    <string name="map_try" translatable="false">Try Again</string>
+    <string name="settingMap">Map</string>
 </resources>

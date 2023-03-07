@@ -1,45 +1,60 @@
 package com.example.weatherapp
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
-import com.google.android.material.navigation.NavigationView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
 import com.example.weatherapp.databinding.ActivityMainBinding
+import com.example.weatherapp.models.LocaleManager
+import com.example.weatherapp.models.Utility
+import com.google.android.material.navigation.NavigationView
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    lateinit var languageSharedPreferences: SharedPreferences
+    lateinit var unitsShared: SharedPreferences
+    lateinit var language: String
+    lateinit var unit: String
+//    private fun updateSharedPreference() {
+//        languageSharedPreferences =
+//            this.getSharedPreferences(Utility.Language_Value_Key, Context.MODE_PRIVATE)
+//        unitsShared = this.getSharedPreferences("Units", Context.MODE_PRIVATE)
+//        language = languageSharedPreferences.getString(Utility.Language_Key, "en")!!
+//        unit = unitsShared.getString(Utility.TEMP_KEY, "metric")!!
+//            // LocaleManager.setLocale(this)
+//        this.recreate()
+//    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        LocaleManager.setLocale(this)
+       // updateSharedPreference()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-//        binding.appBarMain.fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-//        }
+
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home, R.id.nav_favorite, R.id.nav_alerts, R.id.nav_Settings
             ), drawerLayout
         )
-
+       
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }

@@ -1,20 +1,16 @@
 package com.example.weatherapp.ui.favorite.view
 
 import android.Manifest
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Address
 import android.location.Geocoder
 import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
-import android.os.Build
-import androidx.fragment.app.Fragment
-
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
@@ -22,52 +18,36 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.R
-import com.example.weatherapp.databinding.FragmentMapsBinding
-import com.example.weatherapp.models.Daily
 import com.example.weatherapp.models.FavoriteWeatherPlacesModel
 import com.example.weatherapp.repo.Repository
+import com.example.weatherapp.ui.favorite.viewModel.FavoriteFactoryViewModel
 import com.example.weatherapp.ui.favorite.viewModel.FavoriteViewModel
-import com.example.weatherapp.ui.home.view.DailyAdapter
-import com.example.weatherapp.ui.home.view.HomeFactoryViewModel
-import com.example.weatherapp.ui.home.view.HoursAdapter
-import com.example.weatherapp.ui.home.viewModel.HomeViewModel
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Status
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationResult
-
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-
-import com.google.android.gms.location.*
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import com.google.android.material.snackbar.Snackbar
+import java.io.IOException
+import java.util.*
 
 class MapsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     lateinit var factoryViewModel: FavoriteFactoryViewModel
     lateinit var favoriteViewModel: FavoriteViewModel
-
-    //private lateinit var streetName: String
     val PERMISSION_ID = 10
 
     override fun onCreateView(
@@ -226,15 +206,39 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                 mMap.addMarker(
                     MarkerOptions().position(latLng).title("Address")
                 )
-                val geoCoder = Geocoder(requireContext())
-                val address = geoCoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-                var favoriteWeatherPlacesModel = FavoriteWeatherPlacesModel(
-                    address?.get(0)?.adminArea.toString(), latLng.latitude, latLng.longitude
-                )
-                checkSaveToFavorite(
-                    favoriteWeatherPlacesModel,
-                    address?.get(0)?.adminArea.toString()
-                )
+                //   val geoCoder = Geocoder(requireContext())
+                //   val address = geoCoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+
+                var addressGeocoder: Geocoder = Geocoder(requireContext(), Locale.getDefault())
+                try {
+                    var myAddress: List<Address> =
+                        addressGeocoder.getFromLocation(
+                            latLng.latitude,
+                            latLng.longitude,
+                            2
+                        ) as List<Address>
+                    if (myAddress.isNotEmpty()) {
+                        "${myAddress[0].subAdminArea} ${myAddress[0].adminArea}"
+
+                        var favoriteWeatherPlacesModel = FavoriteWeatherPlacesModel(
+                            " ${myAddress[0].adminArea}",
+                            latLng.latitude,
+                            latLng.longitude
+                        )
+                        checkSaveToFavorite(
+                            favoriteWeatherPlacesModel,
+                            " ${myAddress[0].adminArea}"
+                        )
+                    }
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.map_try),
+                        Snackbar.LENGTH_LONG
+                    )
+                }
+
 
             }
         }

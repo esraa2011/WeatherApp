@@ -1,13 +1,10 @@
 package com.example.weatherapp.models
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.jetbrains.annotations.NotNull
 
 @Entity(tableName = "Root")
 data class Root(
-    @NotNull
     @PrimaryKey
     var id: Int,
     val lat: Double,
@@ -16,7 +13,8 @@ data class Root(
     val timezoneOffset: Long,
     val current: Current,
     val hourly: List<Current>,
-    val daily: List<Daily>
+    val daily: List<Daily>,
+
 )
 
 data class Current(
@@ -103,4 +101,14 @@ data class Temp(
     val night: Double,
     val eve: Double,
     val morn: Double
+)
+
+
+data class Alert(
+    val description: String,
+    val end: Int,
+    val event: String,
+    val senderName: String,
+    val start: Int,
+    val tags: List<String>
 )

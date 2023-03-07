@@ -32,7 +32,15 @@
         android:id="@+id/nav_Settings"
         android:name="com.example.weatherapp.ui.settings.view.SettingsFragment"
         android:label="@string/Settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_nav_Settings_to_nav_home"
+            app:destination="@id/nav_home"
+            app:popUpTo="@id/mobile_navigation" />
+        <action
+            android:id="@+id/action_nav_Settings_to_settingMapFragment"
+            app:destination="@id/settingMapFragment" />
+    </fragment>
     <fragment
         android:id="@+id/Nav_map"
         android:name="com.example.weatherapp.ui.favorite.view.MapsFragment"
@@ -45,6 +53,15 @@
         <argument
             android:name="FavoritePlacesSerializable"
             app:argType="com.example.weatherapp.models.FavoriteWeatherPlacesModel" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingMapFragment"
+        android:name="com.example.weatherapp.ui.settings.view.SettingMapFragment"
+        android:label="@string/settingMap" >
+        <action
+            android:id="@+id/action_settingMapFragment_to_nav_home"
+            app:destination="@id/nav_home"
+            app:popUpTo="@id/nav_home" />
     </fragment>
 
 </navigation>

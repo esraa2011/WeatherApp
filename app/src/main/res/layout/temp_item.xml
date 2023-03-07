@@ -6,6 +6,7 @@
     android:layout_height="150dp"
     android:layout_margin="8dp"
     android:padding="8dp"
+    app:cardBackgroundColor="#2EFFFFFF"
     app:cardCornerRadius="50dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +20,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/_12pm"
             android:textSize="15sp"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -39,6 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="21 c"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="@+id/hour_img"
             app:layout_constraintHorizontal_bias="0.523"
             app:layout_constraintStart_toStartOf="@+id/hour_img"
