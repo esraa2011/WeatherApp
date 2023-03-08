@@ -67,7 +67,7 @@ class Utility {
 
         fun timeStampToHour(dt: Long): String {
             var date: Date = Date(dt * 1000)
-            var dateFormat: DateFormat = SimpleDateFormat("h:mm a")
+            var dateFormat: DateFormat = SimpleDateFormat("h:mm aa")
             return dateFormat.format(date)
         }
 

@@ -23,5 +23,11 @@
 
     <style name="Theme.WeatherApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-
+    <style name="Theme.WeatherApp.Dialog"
+        parent="Base.Theme.MaterialComponents.Light.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowMinWidthMajor">98%</item>
+        <item name="android:windowMinWidthMinor">98%</item>
+        <item name="dialogCornerRadius">30dp</item>
+    </style>
 </resources>

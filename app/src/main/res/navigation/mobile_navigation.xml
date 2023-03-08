@@ -27,7 +27,12 @@
         android:id="@+id/nav_alerts"
         android:name="com.example.weatherapp.ui.alert.view.AlertsFragment"
         android:label="@string/Alerts"
-        tools:layout="@layout/alert_fragment" />
+        tools:layout="@layout/alert_fragment" >
+        <action
+            android:id="@+id/action_nav_alerts_to_alertDialogFragment"
+            app:destination="@id/alertDialogFragment"
+            app:popUpTo="@id/nav_alerts" />
+    </fragment>
     <fragment
         android:id="@+id/nav_Settings"
         android:name="com.example.weatherapp.ui.settings.view.SettingsFragment"
@@ -63,5 +68,20 @@
             app:destination="@id/nav_home"
             app:popUpTo="@id/nav_home" />
     </fragment>
+    <dialog
+        android:id="@+id/alertDialogFragment"
+        android:name="com.example.weatherapp.ui.alert.view.AlertDialogFragment"
+        android:label="fragment_alert_dialog"
+        tools:layout="@layout/fragment_alert_dialog" >
+        <action
+            android:id="@+id/action_alertDialogFragment_to_mapAlertFragment2"
+            app:destination="@id/mapAlertFragment2"
+            app:popUpTo="@id/alertDialogFragment" />
+    </dialog>
+    <dialog
+        android:id="@+id/mapAlertFragment2"
+        android:name="com.example.weatherapp.ui.alert.view.MapAlertFragment"
+        android:label="fragment_map_alert"
+        tools:layout="@layout/fragment_map_alert" />
 
 </navigation>

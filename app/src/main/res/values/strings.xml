@@ -74,4 +74,11 @@
     <string name="humidity_tv">Humidity</string>
     <string name="map_try" translatable="false">Try Again</string>
     <string name="settingMap">Map</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="date">Date</string>
+    <string name="zone">Zone</string>
+    <string name="egypt">Egypt</string>
+    <string name="save">Save</string>
+    <string name="date_from">Date From</string>
 </resources>

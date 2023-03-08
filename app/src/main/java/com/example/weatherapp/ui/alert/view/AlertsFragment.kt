@@ -4,12 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import com.example.weatherapp.R
 import com.example.weatherapp.databinding.AlertFragmentBinding
 import com.example.weatherapp.ui.alert.viewModel.AlertsViewModel
-
 
 
 class AlertsFragment : Fragment() {
@@ -29,6 +30,10 @@ class AlertsFragment : Fragment() {
         _binding = AlertFragmentBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        binding.fabAlert.setOnClickListener { view ->
+            Navigation.findNavController(view)
+                .navigate(R.id.action_nav_alerts_to_alertDialogFragment)
+        }
 
         return root
     }
