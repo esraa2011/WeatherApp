@@ -7,25 +7,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentAlertDialogBinding
-import com.example.weatherapp.ui.alert.viewModel.AlertDialogViewModel
+import com.example.weatherapp.models.AlarmPojo
+import com.example.weatherapp.models.Utility
+import com.example.weatherapp.repo.Repository
+import com.example.weatherapp.ui.alert.viewModel.AlertFactoryViewModel
+import com.example.weatherapp.ui.alert.viewModel.AlertsViewModel
 import java.util.*
 
 
 class AlertDialogFragment : DialogFragment() {
     private var _binding: FragmentAlertDialogBinding? = null
     private val binding get() = _binding!!
+    lateinit var factoryViewModel: AlertFactoryViewModel
+
 
     companion object {
         fun newInstance() = AlertDialogFragment()
     }
 
-    private lateinit var viewModel: AlertDialogViewModel
+    private lateinit var viewModel: AlertsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +45,9 @@ class AlertDialogFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        factoryViewModel = AlertFactoryViewModel(Repository(requireContext()))
+        viewModel =
+            ViewModelProvider(this, factoryViewModel).get(AlertsViewModel::class.java)
         _binding = FragmentAlertDialogBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -125,12 +135,56 @@ class AlertDialogFragment : DialogFragment() {
                 binding.zone.text = result
 
             }
+
+
+
+        binding.save.setOnClickListener {
+            if (!binding.startDay.text.isEmpty() && !binding.endDay.text.isEmpty()
+                && !binding.timeStart.text.isEmpty() && !binding.timeEnd.text.isEmpty() && !binding.zone.text.isEmpty()
+            ) {
+                var alert = AlarmPojo(
+                    Utility.dateToLong(binding.startDay.text.toString()),
+                    Utility.dateToLong(binding.endDay.text.toString()),
+                    binding.timeStart.text.toString(),
+                    binding.timeEnd.text.toString(),
+                    binding.zone.text.toString()
+                )
+                viewModel.insertAlert(alert)
+                NavHostFragment.findNavController(this)
+                    .navigate(R.id.nav_alerts)
+            } else {
+
+//                if(binding.startDay.text.isEmpty()){
+//                    Toast.makeText(requireContext(), "Enter Start Day ", Toast.LENGTH_SHORT).show()
+//                }
+//                 if(binding.endDay.text.isEmpty()){
+//                    Toast.makeText(requireContext(), "Enter Start Day ", Toast.LENGTH_SHORT).show()
+//
+//                }
+//                 if(binding.timeStart.text.isEmpty()){
+//                    Toast.makeText(requireContext(), "Enter Start Time ", Toast.LENGTH_SHORT).show()
+//
+//                }
+//                if(binding.timeEnd.text.isEmpty()){
+//                    Toast.makeText(requireContext(), "Enter End Time ", Toast.LENGTH_SHORT).show()
+//
+//                }
+//                if(binding.zone.text.isEmpty()){
+//                    Toast.makeText(requireContext(), "Enter Zone ", Toast.LENGTH_SHORT).show()
+//
+//                }
+
+                Toast.makeText(requireContext(), "Enter  ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Enter Data ", Toast.LENGTH_SHORT).show()
+            }
+
+        }
         return root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(AlertDialogViewModel::class.java)
+
 
     }
 

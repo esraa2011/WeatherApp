@@ -8,6 +8,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weatherapp.R
 import java.text.DateFormat
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -175,6 +176,28 @@ class Utility {
             var date: Date = Date(dt * 1000)
             var dateFormat: DateFormat = SimpleDateFormat("MMM d, yyyy")
             return dateFormat.format(date)
+        }
+
+        fun dateToLong(date: String?): Long {
+            val f = SimpleDateFormat("dd-MM-yyyy")
+            var milliseconds: Long = 0
+            try {
+                val d = date?.let { f.parse(it) }
+                milliseconds = d!!.time
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
+            return milliseconds
+        }
+
+        fun longToDate(dt: Long): String {
+            val date = Date(dt)
+            val dateFormat: DateFormat = SimpleDateFormat("MMM d, yyyy")
+            return dateFormat.format(date)
+        }
+
+        fun timeToMillis(hour: Int, min: Int): Long {
+            return ((hour * 60 + min) * 60 * 1000).toLong()
         }
 
 

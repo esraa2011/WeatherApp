@@ -7,15 +7,14 @@ import java.io.Serializable
 
 @Entity
 data class AlarmPojo(
-    var alarmTitle : String,
-    var alarmStartDate : Long,
-    var alarmEndDate : Long,
-    var alarmTime : Long,
-    var alarmType : String,
-    var alarmDays : List<String>,
-    var isNotification : Boolean
-) : Serializable{
+    var alarmStartDay: Long,
+    var alarmEndDay: Long,
+    var alarmStartTime: String,
+    var alarmEndTime: String,
+    var areaName: String
+
+) : Serializable {
     @PrimaryKey(autoGenerate = true)
     @NotNull
-    var id : Int = 0
+    var id: Int = 0
 }

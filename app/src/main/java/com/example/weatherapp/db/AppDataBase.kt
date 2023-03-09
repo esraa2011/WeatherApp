@@ -9,14 +9,14 @@ import com.example.weatherapp.models.*
 
 
 @Database(
-    entities = [Root::class, FavoriteWeatherPlacesModel::class],
-    version = 3
+    entities = [Root::class, FavoriteWeatherPlacesModel::class,AlarmPojo::class],
+    version = 1
 )
 @TypeConverters(Converters::class)
 abstract class AppDataBase : RoomDatabase() {
     abstract fun favoriteWeatherPlacesDAO(): FavoriteWeatherPlacesDAO
     abstract fun weatherDAO(): WeatherDAO
-  //  abstract fun AlertDAO(): AlertDAO
+     abstract fun AlertDAO(): AlertDAO
 
     companion object {
         private var INSTANCE: AppDataBase? = null

@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weatherapp.db.AppDataBase
+import com.example.weatherapp.models.AlarmPojo
 import com.example.weatherapp.models.FavoriteWeatherPlacesModel
 import com.example.weatherapp.models.Root
 import com.example.weatherapp.models.Utility
@@ -13,7 +14,6 @@ import com.example.weatherapp.network.RetrofitInterface
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlin.math.log
 
 class Repository(private val context: Context) {
 
@@ -100,7 +100,7 @@ class Repository(private val context: Context) {
 
     suspend fun getFavoriteWeather(favoriteWeatherPlacesModel: FavoriteWeatherPlacesModel): Flow<Root> =
         flow {
-           updateSharedPreferance()
+            updateSharedPreferance()
             apiObject.getCurrentTempData(
                 favoriteWeatherPlacesModel.lat,
                 favoriteWeatherPlacesModel.lon,
@@ -159,4 +159,17 @@ class Repository(private val context: Context) {
 
     }
 
+    fun getAlert() =
+        AppDataBase.getInstance(context).AlertDAO()
+            .getAlert()
+
+    suspend fun insertAlert(alert: AlarmPojo) {
+        AppDataBase.getInstance(context).AlertDAO()
+            .insertAlert(alert)
+    }
+
+    suspend fun deleteAlert(alert: AlarmPojo) {
+        AppDataBase.getInstance(context).AlertDAO()
+            .deleteAlert(alert)
+    }
 }
