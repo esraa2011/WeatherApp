@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentSettingsBinding
-import com.example.weatherapp.models.LocaleManager
-import com.example.weatherapp.models.Utility
+import com.example.weatherapp.data.models.LocaleManager
+import com.example.weatherapp.data.models.Utility
 
 
 class SettingsFragment : Fragment() {

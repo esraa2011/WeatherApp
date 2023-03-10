@@ -1,22 +1,52 @@
-package com.example.weatherapp.repo
+package com.example.weatherapp.data.repo
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.example.weatherapp.db.AppDataBase
-import com.example.weatherapp.models.AlarmPojo
-import com.example.weatherapp.models.FavoriteWeatherPlacesModel
-import com.example.weatherapp.models.Root
-import com.example.weatherapp.models.Utility
-import com.example.weatherapp.network.RetrofitHelper
-import com.example.weatherapp.network.RetrofitInterface
+import com.example.weatherapp.data.db.AppDataBase
+import com.example.weatherapp.data.db.LocalDataSource
+import com.example.weatherapp.data.models.AlarmPojo
+import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
+import com.example.weatherapp.data.models.Root
+import com.example.weatherapp.data.models.Utility
+import com.example.weatherapp.data.network.RemoteDataSource
+import com.example.weatherapp.data.network.RetrofitHelper
+import com.example.weatherapp.data.network.RetrofitInterface
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class Repository(private val context: Context) {
+class Repository(
 
+    private val remoteDataSource: DataSource,
+    private val localDataSource: DataSource,
+    private val context: Context
+) {
+
+    companion object {
+        @Volatile
+        private var INSTANCE: Repository? = null
+        fun getRepository(app: Application): Repository {
+            return INSTANCE ?: synchronized(this) {
+                val room = AppDataBase.getInstance(app)
+                val retrofit = RetrofitHelper.getInstance()
+                val api = retrofit.create(RetrofitInterface::class.java)
+                val localDataSource = LocalDataSource(
+                    favoriteWeatherPlacesDAO = room.favoriteWeatherPlacesDAO(),
+                    alertDAO = room.AlertDAO(),
+                    weatherDAO = room.weatherDAO()
+                )
+                val remoteDataSource = RemoteDataSource(api = api)
+                Repository(
+                    remoteDataSource = remoteDataSource,
+                    localDataSource = localDataSource,
+                    app.applicationContext
+                )
+            }
+        }
+    }
 
     lateinit var languageSharedPreferences: SharedPreferences
     lateinit var unitsShared: SharedPreferences
@@ -58,15 +88,12 @@ class Repository(private val context: Context) {
     }
 
 
-    private val apiObject: RetrofitInterface =
-        RetrofitHelper.getInstance().create(RetrofitInterface::class.java)
-
     suspend fun getRoot(latLng: LatLng): Flow<Root> = flow {
 
 
         updateSharedPreferance()
         if (location == Utility.GPS) {
-            apiObject.getCurrentTempData(
+            remoteDataSource.getCurrentTempData(
                 latLng.latitude,
                 latLng.longitude,
                 "bec88e8dd2446515300a492c3862a10e",
@@ -82,7 +109,7 @@ class Repository(private val context: Context) {
         } else {
             Log.i("esraa", "getRoot: 12345")
 
-            apiObject.getCurrentTempData(
+            remoteDataSource.getCurrentTempData(
                 latitude.toDouble(),
                 longitude.toDouble(),
                 "bec88e8dd2446515300a492c3862a10e",
@@ -101,7 +128,7 @@ class Repository(private val context: Context) {
     suspend fun getFavoriteWeather(favoriteWeatherPlacesModel: FavoriteWeatherPlacesModel): Flow<Root> =
         flow {
             updateSharedPreferance()
-            apiObject.getCurrentTempData(
+            remoteDataSource.getCurrentTempData(
                 favoriteWeatherPlacesModel.lat,
                 favoriteWeatherPlacesModel.lon,
                 "bec88e8dd2446515300a492c3862a10e",
@@ -116,29 +143,29 @@ class Repository(private val context: Context) {
         }
 
     suspend fun insertFavoritePlaces(favoriteWeatherPlacesModel: FavoriteWeatherPlacesModel) {
-        AppDataBase.getInstance(context).favoriteWeatherPlacesDAO()
+        localDataSource
             .addPlaceToFavorite(favoriteWeatherPlacesModel)
     }
 
     suspend fun deleteFromFav(favoriteWeatherPlacesModel: FavoriteWeatherPlacesModel) {
-        AppDataBase.getInstance(context).favoriteWeatherPlacesDAO()
+        localDataSource
             .deletePlaceFromFavorite(favoriteWeatherPlacesModel)
     }
 
     fun getCurrentWeather() =
-        AppDataBase.getInstance(context).weatherDAO().getLastWeather()
+        localDataSource.getLastWeather()
 
     fun getFavoritePlaces() =
-        AppDataBase.getInstance(context).favoriteWeatherPlacesDAO()
+        localDataSource
             .getAllFavoriteWeatherPlaces()
 
 
     fun insertCurrentWeather(root: Root) {
-        AppDataBase.getInstance(context).weatherDAO().insertLastWeather(root)
+        localDataSource.insertLastWeather(root)
     }
 
     suspend fun deleteCurrentWeather() {
-        AppDataBase.getInstance(context).weatherDAO().deleteCurrentWeather()
+        localDataSource.deleteCurrentWeather()
     }
 
 
@@ -160,16 +187,16 @@ class Repository(private val context: Context) {
     }
 
     fun getAlert() =
-        AppDataBase.getInstance(context).AlertDAO()
+        localDataSource
             .getAlert()
 
     suspend fun insertAlert(alert: AlarmPojo) {
-        AppDataBase.getInstance(context).AlertDAO()
+        localDataSource
             .insertAlert(alert)
     }
 
     suspend fun deleteAlert(alert: AlarmPojo) {
-        AppDataBase.getInstance(context).AlertDAO()
+        localDataSource
             .deleteAlert(alert)
     }
 }

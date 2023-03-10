@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FavoriteFragmentBinding
-import com.example.weatherapp.repo.Repository
+import com.example.weatherapp.data.repo.Repository
 import com.example.weatherapp.ui.favorite.viewModel.ApiState
 import com.example.weatherapp.ui.favorite.viewModel.FavoriteFactoryViewModel
 
@@ -38,7 +38,8 @@ class FavoriteFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        factoryViewModel = FavoriteFactoryViewModel(Repository(requireContext()))
+        val repository = Repository.getRepository(requireActivity().application)
+        factoryViewModel = FavoriteFactoryViewModel(repository)
         val favoriteViewModel =
             ViewModelProvider(this, factoryViewModel).get(FavoriteViewModel::class.java)
 

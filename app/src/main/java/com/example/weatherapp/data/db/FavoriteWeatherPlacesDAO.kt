@@ -1,8 +1,8 @@
-package com.example.weatherapp.db
+package com.example.weatherapp.data.db
 
 
 import androidx.room.*
-import com.example.weatherapp.models.FavoriteWeatherPlacesModel
+import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao

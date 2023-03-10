@@ -8,8 +8,8 @@ import com.bumptech.glide.Glide
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.DailyItemBinding
 import com.example.weatherapp.databinding.FavItemBinding
-import com.example.weatherapp.models.Daily
-import com.example.weatherapp.models.FavoriteWeatherPlacesModel
+import com.example.weatherapp.data.models.Daily
+import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*

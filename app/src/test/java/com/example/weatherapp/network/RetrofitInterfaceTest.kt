@@ -2,7 +2,9 @@ package com.example.weatherapp.network
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.weatherapp.models.Root
+import com.example.weatherapp.data.models.Root
+import com.example.weatherapp.data.network.RetrofitHelper
+import com.example.weatherapp.data.network.RetrofitInterface
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.core.Is

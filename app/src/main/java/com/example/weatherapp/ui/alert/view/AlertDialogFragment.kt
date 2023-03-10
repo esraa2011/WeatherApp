@@ -13,10 +13,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.example.weatherapp.R
+import com.example.weatherapp.data.models.AlarmPojo
+import com.example.weatherapp.data.models.Utility
+import com.example.weatherapp.data.repo.Repository
 import com.example.weatherapp.databinding.FragmentAlertDialogBinding
-import com.example.weatherapp.models.AlarmPojo
-import com.example.weatherapp.models.Utility
-import com.example.weatherapp.repo.Repository
 import com.example.weatherapp.ui.alert.viewModel.AlertFactoryViewModel
 import com.example.weatherapp.ui.alert.viewModel.AlertsViewModel
 import java.util.*
@@ -45,7 +45,8 @@ class AlertDialogFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        factoryViewModel = AlertFactoryViewModel(Repository(requireContext()))
+        val repository = Repository.getRepository(requireActivity().application)
+        factoryViewModel = AlertFactoryViewModel(repository)
         viewModel =
             ViewModelProvider(this, factoryViewModel).get(AlertsViewModel::class.java)
         _binding = FragmentAlertDialogBinding.inflate(inflater, container, false)

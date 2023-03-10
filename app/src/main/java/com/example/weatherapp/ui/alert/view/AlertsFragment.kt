@@ -11,12 +11,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.example.weatherapp.R
+import com.example.weatherapp.data.repo.Repository
 import com.example.weatherapp.databinding.AlertFragmentBinding
-import com.example.weatherapp.repo.Repository
 import com.example.weatherapp.ui.alert.viewModel.AlertFactoryViewModel
 import com.example.weatherapp.ui.alert.viewModel.AlertState
 import com.example.weatherapp.ui.alert.viewModel.AlertsViewModel
-import com.example.weatherapp.ui.favorite.viewModel.FavoriteViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -36,9 +35,8 @@ class AlertsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        factoryViewModel = AlertFactoryViewModel(Repository(requireContext()))
-
+        val repository = Repository.getRepository(requireActivity().application)
+        factoryViewModel = AlertFactoryViewModel(repository)
 
 
         val alertsViewModel =

@@ -3,7 +3,7 @@ package com.example.weatherapp.ui.alert.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.weatherapp.repo.Repository
+import com.example.weatherapp.data.repo.Repository
 
 
 class AlertFactoryViewModel(

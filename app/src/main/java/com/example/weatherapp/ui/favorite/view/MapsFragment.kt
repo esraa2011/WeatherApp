@@ -23,8 +23,8 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapp.R
-import com.example.weatherapp.models.FavoriteWeatherPlacesModel
-import com.example.weatherapp.repo.Repository
+import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
+import com.example.weatherapp.data.repo.Repository
 import com.example.weatherapp.ui.favorite.viewModel.FavoriteFactoryViewModel
 import com.example.weatherapp.ui.favorite.viewModel.FavoriteViewModel
 import com.google.android.gms.common.api.Status
@@ -56,7 +56,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        factoryViewModel = FavoriteFactoryViewModel(Repository(requireContext()))
+        val repository = Repository.getRepository(requireActivity().application)
+        factoryViewModel = FavoriteFactoryViewModel(repository)
         favoriteViewModel =
             ViewModelProvider(this, factoryViewModel).get(FavoriteViewModel::class.java)
 

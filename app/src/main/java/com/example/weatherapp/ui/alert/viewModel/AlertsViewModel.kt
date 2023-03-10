@@ -2,9 +2,9 @@ package com.example.weatherapp.ui.alert.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.models.AlarmPojo
-import com.example.weatherapp.models.FavoriteWeatherPlacesModel
-import com.example.weatherapp.repo.Repository
+import com.example.weatherapp.data.models.AlarmPojo
+import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
+import com.example.weatherapp.data.repo.Repository
 import com.example.weatherapp.ui.favorite.viewModel.ApiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

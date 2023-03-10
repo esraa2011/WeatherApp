@@ -1,4 +1,4 @@
-package com.example.weatherapp.db
+package com.example.weatherapp.data.db
 
 
 import androidx.room.Dao
@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
-import com.example.weatherapp.models.Root
+import com.example.weatherapp.data.models.Root
 import kotlinx.coroutines.flow.Flow
 
 

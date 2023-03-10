@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.databinding.TempItemBinding
-import com.example.weatherapp.models.Current
-import com.example.weatherapp.models.Utility
+import com.example.weatherapp.data.models.Current
+import com.example.weatherapp.data.models.Utility
 
 class HoursAdapter(private val weather: List<Current>, var context: Context?) :
     RecyclerView.Adapter<HoursAdapter.ViewHolder>() {

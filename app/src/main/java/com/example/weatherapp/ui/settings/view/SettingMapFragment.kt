@@ -23,7 +23,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.weatherapp.R
-import com.example.weatherapp.models.Utility
+import com.example.weatherapp.data.models.Utility
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory

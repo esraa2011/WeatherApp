@@ -1,4 +1,4 @@
-package com.example.weatherapp.models
+package com.example.weatherapp.data.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -15,7 +15,7 @@ data class Root(
     val hourly: List<Current>,
     val daily: List<Daily>,
 
-)
+    )
 
 data class Current(
     val dt: Long,

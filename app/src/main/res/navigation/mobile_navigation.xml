@@ -57,7 +57,7 @@
         android:label="@string/Current_Weather" >
         <argument
             android:name="FavoritePlacesSerializable"
-            app:argType="com.example.weatherapp.models.FavoriteWeatherPlacesModel" />
+            app:argType="com.example.weatherapp.data.models.FavoriteWeatherPlacesModel" />
     </fragment>
     <fragment
         android:id="@+id/settingMapFragment"

@@ -1,15 +1,19 @@
-package com.example.weatherapp.db
+package com.example.weatherapp.data.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.weatherapp.models.*
+import com.example.weatherapp.data.models.AlarmPojo
+import com.example.weatherapp.data.models.Converters
+import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
+import com.example.weatherapp.data.models.Root
+
 
 
 @Database(
-    entities = [Root::class, FavoriteWeatherPlacesModel::class,AlarmPojo::class],
+    entities = [Root::class, FavoriteWeatherPlacesModel::class, AlarmPojo::class],
     version = 1
 )
 @TypeConverters(Converters::class)

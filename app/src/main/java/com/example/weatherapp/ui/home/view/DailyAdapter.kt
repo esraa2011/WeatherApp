@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.databinding.DailyItemBinding
-import com.example.weatherapp.models.Daily
-import com.example.weatherapp.models.Utility
+import com.example.weatherapp.data.models.Daily
+import com.example.weatherapp.data.models.Utility
 
 class DailyAdapter(private val daily: List<Daily>, var context: Context?) :
     RecyclerView.Adapter<DailyAdapter.ViewHolder>() {

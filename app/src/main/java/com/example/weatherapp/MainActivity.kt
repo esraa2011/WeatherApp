@@ -11,8 +11,8 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.weatherapp.databinding.ActivityMainBinding
-import com.example.weatherapp.models.LocaleManager
-import com.example.weatherapp.models.Utility
+import com.example.weatherapp.data.models.LocaleManager
+import com.example.weatherapp.data.models.Utility
 import com.google.android.material.navigation.NavigationView
 
 

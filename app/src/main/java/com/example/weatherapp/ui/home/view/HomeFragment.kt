@@ -21,9 +21,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.weatherapp.R
+import com.example.weatherapp.data.models.Utility
+import com.example.weatherapp.data.repo.Repository
 import com.example.weatherapp.databinding.FragmentHomeBinding
-import com.example.weatherapp.models.Utility
-import com.example.weatherapp.repo.Repository
 import com.example.weatherapp.ui.home.viewModel.ApiStateRoot
 import com.example.weatherapp.ui.home.viewModel.HomeFactoryViewModel
 import com.example.weatherapp.ui.home.viewModel.HomeViewModel
@@ -48,7 +48,7 @@ class HomeFragment : Fragment() {
     lateinit var unit: String
     val PERMISSION_ID = 10
     lateinit var homeViewModel: HomeViewModel
-    var flagFirstEnter:Boolean=true
+    var flagFirstEnter: Boolean = true
     // var latLng = LatLng( 0.0,  0.0)
 
 
@@ -60,8 +60,8 @@ class HomeFragment : Fragment() {
     ): View {
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-
-        factoryViewModel = HomeFactoryViewModel(Repository(requireContext()))
+        val repository = Repository.getRepository(requireActivity().application)
+        factoryViewModel = HomeFactoryViewModel(repository)
 
         homeViewModel =
             ViewModelProvider(this, factoryViewModel).get(HomeViewModel::class.java)
@@ -269,17 +269,17 @@ class HomeFragment : Fragment() {
     }
 
 
-private fun requestPermission() {
-    Log.i("per", "requestPermission: ")
+    private fun requestPermission() {
+        Log.i("per", "requestPermission: ")
 
-    requestPermissions(
-        arrayOf<String>(
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ),
-        PERMISSION_ID
-    )
-}
+        requestPermissions(
+            arrayOf<String>(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ),
+            PERMISSION_ID
+        )
+    }
 
     @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
@@ -335,7 +335,7 @@ private fun requestPermission() {
 
     private val mLocationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-          //  super.onLocationResult(locationResult)
+            //  super.onLocationResult(locationResult)
             mFusedLocationClient.removeLocationUpdates(this)
 
             var mLastLocation: Location? = locationResult.getLastLocation()

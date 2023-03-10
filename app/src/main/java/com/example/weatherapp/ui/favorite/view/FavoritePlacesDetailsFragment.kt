@@ -13,14 +13,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.weatherapp.R
+import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
+import com.example.weatherapp.data.models.Utility
+import com.example.weatherapp.data.repo.Repository
 import com.example.weatherapp.databinding.FragmentFavoritePlacesDetailsBinding
-import com.example.weatherapp.models.FavoriteWeatherPlacesModel
-import com.example.weatherapp.repo.Repository
 import com.example.weatherapp.ui.favorite.viewModel.FavoriteFactoryViewModel
 import com.example.weatherapp.ui.favorite.viewModel.FavoriteViewModel
 import com.example.weatherapp.ui.home.view.DailyAdapter
 import com.example.weatherapp.ui.home.view.HoursAdapter
-import com.example.weatherapp.models.Utility
 import com.example.weatherapp.ui.home.viewModel.ApiStateRoot
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
@@ -47,7 +47,8 @@ class FavoritePlacesDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        factoryViewModel = FavoriteFactoryViewModel(Repository(requireContext()))
+        val repository = Repository.getRepository(requireActivity().application)
+        factoryViewModel = FavoriteFactoryViewModel(repository)
         val favoriteViewModel =
             ViewModelProvider(this, factoryViewModel).get(FavoriteViewModel::class.java)
         _binding = FragmentFavoritePlacesDetailsBinding.inflate(inflater, container, false)

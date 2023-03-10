@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.databinding.AlertItemBinding
 import com.example.weatherapp.databinding.FavItemBinding
-import com.example.weatherapp.models.AlarmPojo
-import com.example.weatherapp.models.FavoriteWeatherPlacesModel
-import com.example.weatherapp.models.Utility
+import com.example.weatherapp.data.models.AlarmPojo
+import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
+import com.example.weatherapp.data.models.Utility
 import com.example.weatherapp.ui.favorite.view.FavoriteAdapter
 
 class AlertAdapter(private var alert: List<AlarmPojo>,
@@ -26,8 +26,8 @@ class AlertAdapter(private var alert: List<AlarmPojo>,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var currentAlert = alert[position]
-        holder.binding.tvStartDay.text=Utility.longToDate(alert[position].alarmStartDay)
-        holder.binding.tvEndDay.text=Utility.longToDate(alert[position].alarmEndDay)
+        holder.binding.tvStartDay.text= Utility.longToDate(alert[position].alarmStartDay)
+        holder.binding.tvEndDay.text= Utility.longToDate(alert[position].alarmEndDay)
         holder.binding.tvStartTime.text=alert[position].alarmStartTime
         holder.binding.tvEndTime.text=alert[position].alarmEndTime
         holder.binding.deleteAlert.setOnClickListener {
