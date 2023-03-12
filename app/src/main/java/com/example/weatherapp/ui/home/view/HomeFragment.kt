@@ -89,145 +89,145 @@ class HomeFragment : Fragment() {
                 when (result) {
 
                     is ApiStateRoot.loading -> {
-                        binding.gifHome.visibility = View.VISIBLE
-                        binding.cardView.visibility = View.GONE
-                        binding.cardHome.visibility = View.GONE
+                    //    binding.gifHome.visibility = View.VISIBLE
+                      //  binding.cardView.visibility = View.GONE
+              // binding.cardHome.visibility = View.GONE
                     }
                     is ApiStateRoot.Success -> {
 
                         //  getLastMLocation()
-                        binding.gifHome.visibility = View.GONE
-                        binding.cardView.visibility = View.VISIBLE
-                        binding.cardHome.visibility = View.VISIBLE
+                      //  binding.gifHome.visibility = View.GONE
+                     //   binding.cardView.visibility = View.VISIBLE
+                      //  binding.cardHome.visibility = View.VISIBLE
 
                         if (lang == "en" && unit == "metric") {
                             binding.area.text = result.data.timezone
                             binding.todayWeather.text =
-                                "${result.data.current.temp.toInt()} ℃"
-                            binding.pressureMeasure.text = "${result.data.current.pressure} hPa"
+                                "${result.data.current?.temp?.toInt()} ℃"
+                            binding.pressureMeasure.text = "${result.data.current?.pressure} hPa"
                             binding.humidityMeasure.text =
-                                "${result.data.current.humidity} %"
+                                "${result.data.current?.humidity} %"
                             binding.windMeasure.text =
-                                "${result.data.current.windSpeed} m/s"
+                                "${result.data.current?.windSpeed} m/s"
                             binding.cloudMeasure.text =
-                                "${result.data.current.clouds} m"
+                                "${result.data.current?.clouds} m"
                             binding.violateMeasure.text =
-                                "${result.data.current.uvi} %"
+                                "${result.data.current?.uvi} %"
                             binding.visibilityMeasure.text =
-                                "${result.data.current.visibility} %"
+                                "${result.data.current?.visibility} %"
 
-                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current.weather[0].icon))
+                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current!!.weather[0].icon))
                             binding.todayWeatherStatus.text =
-                                result.data.current.weather[0].description
+                                result.data.current?.weather!![0].description
 
                         } else if (lang == "ar" && unit == "metric") {
                             binding.area.text = result.data.timezone
                             binding.todayWeather.text =
-                                Utility.convertNumbersToArabic(result.data.current.temp.toInt()) + " س°"
+                                result.data.current?.temp?.let { Utility.convertNumbersToArabic(it.toInt()) } + " س°"
 
                             binding.pressureMeasure.text =
-                                Utility.convertNumbersToArabic(result.data.current.pressure) + "هـ ب أ"
+                                result.data.current?.let { Utility.convertNumbersToArabic(it.pressure) } + "هـ ب أ"
                             binding.humidityMeasure.text =
-                                "${Utility.convertNumbersToArabic(result.data.current.humidity)} %"
+                                "${result.data.current?.let { Utility.convertNumbersToArabic(it.humidity) }} %"
                             binding.windMeasure.text =
-                                Utility.convertNumbersToArabic(result.data.current.windSpeed) + " م/ث "
+                                result.data.current?.let { Utility.convertNumbersToArabic(it.windSpeed) } + " م/ث "
                             binding.cloudMeasure.text =
-                                Utility.convertNumbersToArabic(result.data.current.clouds) + " م "
+                                result.data.current?.let { Utility.convertNumbersToArabic(it.clouds) } + " م "
                             binding.violateMeasure.text =
-                                Utility.convertNumbersToArabic(result.data.current.uvi) + " %"
+                                result.data.current?.let { Utility.convertNumbersToArabic(it.uvi) } + " %"
                             binding.visibilityMeasure.text =
-                                Utility.convertNumbersToArabic(result.data.current.visibility) + " %"
+                                Utility.convertNumbersToArabic(result.data.current!!.visibility) + " %"
 
-                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current.weather[0].icon))
+                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current!!.weather[0].icon))
                             binding.todayWeatherStatus.text =
-                                result.data.current.weather[0].description
+                                result.data.current?.weather!![0].description
 
                         } else if (lang == "ar" && unit == "imperial") {
                             binding.area.text = result.data.timezone
                             binding.todayWeather.text =
-                                Utility.convertNumbersToArabic(result.data.current.temp.toInt()) + "ف° "
+                                Utility.convertNumbersToArabic(result.data.current?.temp!!.toInt()) + "ف° "
                             binding.pressureMeasure.text =
-                                Utility.convertNumbersToArabic(result.data.current.pressure) + "هـ ب أ"
+                                result.data.current?.let { Utility.convertNumbersToArabic(it.pressure) } + "هـ ب أ"
                             binding.humidityMeasure.text =
-                                "${Utility.convertNumbersToArabic(result.data.current.humidity)} %"
+                                "${result.data.current?.let { Utility.convertNumbersToArabic(it.humidity) }} %"
                             binding.windMeasure.text =
-                                Utility.convertNumbersToArabic(result.data.current.windSpeed) + " كم/س "
+                                result.data.current?.let { Utility.convertNumbersToArabic(it.windSpeed) } + " كم/س "
                             binding.cloudMeasure.text =
-                                Utility.convertNumbersToArabic(result.data.current.clouds) + " كم "
+                                result.data.current?.let { Utility.convertNumbersToArabic(it.clouds) } + " كم "
                             binding.violateMeasure.text =
-                                Utility.convertNumbersToArabic(result.data.current.uvi) + " %"
+                                result.data.current?.let { Utility.convertNumbersToArabic(it.uvi) } + " %"
                             binding.visibilityMeasure.text =
-                                Utility.convertNumbersToArabic(result.data.current.visibility) + " %"
-                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current.weather[0].icon))
+                                result.data.current?.let { Utility.convertNumbersToArabic(it.visibility) } + " %"
+                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current!!.weather[0].icon))
                             binding.todayWeatherStatus.text =
-                                result.data.current.weather[0].description
+                                result.data.current?.weather!![0].description
 
                         } else if (lang == "en" && unit == "imperial") {
                             binding.area.text = result.data.timezone
-                            binding.todayWeather.text = "${result.data.current.temp.toInt()} ℉"
-                            binding.pressureMeasure.text = "${result.data.current.pressure} hPa"
+                            binding.todayWeather.text = "${result.data.current?.temp?.toInt()} ℉"
+                            binding.pressureMeasure.text = "${result.data.current?.pressure} hPa"
                             binding.humidityMeasure.text =
-                                "${result.data.current.humidity} %"
+                                "${result.data.current?.humidity} %"
                             binding.windMeasure.text =
-                                "${result.data.current.windSpeed}  km/h"
+                                "${result.data.current?.windSpeed}  km/h"
                             binding.cloudMeasure.text =
-                                "${result.data.current.clouds} Km"
+                                "${result.data.current?.clouds} Km"
                             binding.violateMeasure.text =
-                                "${result.data.current.uvi} %"
+                                "${result.data.current?.uvi} %"
                             binding.visibilityMeasure.text =
-                                "${result.data.current.visibility} %"
+                                "${result.data.current?.visibility} %"
 
-                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current.weather[0].icon))
+                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current?.weather?.get(0)!!.icon))
                             binding.todayWeatherStatus.text =
-                                result.data.current.weather[0].description
+                                result.data.current?.weather!![0].description
 
                         } else if (lang == "en" && unit == "standard") {
                             binding.area.text = result.data.timezone
-                            binding.todayWeather.text = "${result.data.current.temp.toInt()}  °K"
-                            binding.pressureMeasure.text = "${result.data.current.pressure} hPa"
+                            binding.todayWeather.text = "${result.data.current?.temp!!.toInt()}  °K"
+                            binding.pressureMeasure.text = "${result.data.current?.pressure} hPa"
                             binding.humidityMeasure.text =
-                                "${result.data.current.humidity} %"
+                                "${result.data.current?.humidity} %"
                             binding.windMeasure.text =
-                                "${result.data.current.windSpeed}  m/s"
+                                "${result.data.current?.windSpeed}  m/s"
                             binding.cloudMeasure.text =
-                                "${result.data.current.clouds} m"
+                                "${result.data.current?.clouds} m"
                             binding.violateMeasure.text =
-                                "${result.data.current.uvi} %"
+                                "${result.data.current?.uvi} %"
                             binding.visibilityMeasure.text =
-                                "${result.data.current.visibility} %"
+                                "${result.data.current?.visibility} %"
 
 
-                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current.weather[0].icon))
+                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current!!.weather[0].icon))
                             binding.todayWeatherStatus.text =
-                                result.data.current.weather[0].description
+                                result.data.current?.weather!![0].description
 
                         } else if (lang == "ar" && unit == "standard") {
                             binding.todayWeather.text =
-                                Utility.convertNumbersToArabic(result.data.current.temp.toInt()) + "ك°"
+                                result.data.current?.temp?.let { Utility.convertNumbersToArabic(it.toInt()) } + "ك°"
 
                             binding.pressureMeasure.text =
-                                Utility.convertNumbersToArabic(result.data.current.pressure) + "هـ ب أ"
+                                result.data.current?.let { Utility.convertNumbersToArabic(it.pressure) } + "هـ ب أ"
                             binding.humidityMeasure.text =
-                                "${Utility.convertNumbersToArabic(result.data.current.humidity)} %"
+                                "${result.data.current?.let { Utility.convertNumbersToArabic(it.humidity) }} %"
                             binding.windMeasure.text =
-                                Utility.convertNumbersToArabic(result.data.current.windSpeed) + " م/ث "
+                                result.data.current?.let { Utility.convertNumbersToArabic(it.windSpeed) } + " م/ث "
                             binding.cloudMeasure.text =
-                                Utility.convertNumbersToArabic(result.data.current.clouds) + " م "
+                                result.data.current?.let { Utility.convertNumbersToArabic(it.clouds) } + " م "
                             binding.violateMeasure.text =
-                                Utility.convertNumbersToArabic(result.data.current.uvi) + " %"
+                                result.data.current?.let { Utility.convertNumbersToArabic(it.uvi) } + " %"
                             binding.visibilityMeasure.text =
-                                Utility.convertNumbersToArabic(result.data.current.visibility) + " %"
+                                result.data.current?.let { Utility.convertNumbersToArabic(it.visibility) } + " %"
 
-                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current.weather[0].icon))
+                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current?.weather!![0].icon))
                             binding.todayWeatherStatus.text =
-                                result.data.current.weather[0].description
+                                result.data.current?.weather?.get(0)!!.description
                         }
                         dailyAdapter =
                             DailyAdapter(result.data.daily, requireContext())
                         binding.homeRecycleDaily.adapter = dailyAdapter
 
                         hoursAdapter =
-                            HoursAdapter(result.data.hourly, requireContext())
+                            result.data.hourly?.let { HoursAdapter(it, requireContext()) }!!
                         binding.homeRecycleHours.adapter = hoursAdapter
 
 

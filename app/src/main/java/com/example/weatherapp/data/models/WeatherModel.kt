@@ -11,9 +11,9 @@ data class Root(
     val lon: Double,
     val timezone: String,
     val timezoneOffset: Long,
-    val current: Current,
-    val hourly: List<Current>,
-    val daily: List<Daily>,
+    var current: Current?,
+    var hourly: List<Current>? =null,
+    var daily: List<Daily>,
 
     )
 

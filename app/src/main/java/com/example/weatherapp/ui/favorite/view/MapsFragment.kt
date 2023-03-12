@@ -224,13 +224,13 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                         "${myAddress[0].subAdminArea} ${myAddress[0].adminArea}"
 
                         var favoriteWeatherPlacesModel = FavoriteWeatherPlacesModel(
-                            " ${myAddress[0].adminArea}",
+                            " ${myAddress[0].locality}",
                             latLng.latitude,
                             latLng.longitude
                         )
                         checkSaveToFavorite(
                             favoriteWeatherPlacesModel,
-                            " ${myAddress[0].adminArea}"
+                            " ${myAddress[0].locality}"
                         )
                     }
                 } catch (e: IOException) {

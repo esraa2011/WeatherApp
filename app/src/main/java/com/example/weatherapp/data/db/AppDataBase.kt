@@ -14,7 +14,7 @@ import com.example.weatherapp.data.models.Root
 
 @Database(
     entities = [Root::class, FavoriteWeatherPlacesModel::class, AlarmPojo::class],
-    version = 1
+    version = 2
 )
 @TypeConverters(Converters::class)
 abstract class AppDataBase : RoomDatabase() {

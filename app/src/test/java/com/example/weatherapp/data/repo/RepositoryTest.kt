@@ -1,13 +1,24 @@
 package com.example.weatherapp.data.repo
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.weatherapp.data.models.AlarmPojo
 import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
 import com.example.weatherapp.data.models.Root
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
+@ExperimentalCoroutinesApi
+@RunWith(AndroidJUnit4::class)
 class RepositoryTest {
+    @get:Rule
+    var instantTaskExecutorRule=InstantTaskExecutorRule()
+
     private var favoriteList: MutableList<FavoriteWeatherPlacesModel> =
         mutableListOf<FavoriteWeatherPlacesModel>(
 
@@ -17,7 +28,7 @@ class RepositoryTest {
         AlarmPojo(12, 13, "1", "2", "wind")
     )
     private var rootList: MutableList<Root> = mutableListOf<Root>(
-        Root(1, 20.0, 32.0, "mansoura", null, null, null, null)
+        Root(1, 20.0, 32.0, "mansoura", 55, null , emptyList(), emptyList() )
 
     )
     private lateinit var remoteDataSource: FakeDataSource
@@ -29,7 +40,7 @@ class RepositoryTest {
         remoteDataSource = FakeDataSource(favoriteList, alertList, rootList)
         localDataSource = FakeDataSource(favoriteList, alertList, rootList)
         repository = Repository(
-            remoteDataSource = remoteDataSource, localDataSource = localDataSource,
+            remoteDataSource,  localDataSource,
             ApplicationProvider.getApplicationContext()
         )
     }
@@ -125,10 +136,12 @@ class RepositoryTest {
 
     @Test
     fun getFavoriteWeather() {
-    }
 
+    }
+@ExperimentalCoroutinesApi
     @Test
-    fun insertFavoritePlaces() {
+    fun insertFavoritePlaces() = runBlockingTest{
+        repository.insertFavoritePlaces(favoriteList[0])
     }
 
     @Test

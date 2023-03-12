@@ -21,7 +21,7 @@ class FakeDataSource(
         lang: String
     ): Response<Root> {
         return Response.success(
-            Root()
+            Root(1, 20.0, 32.0, "mansoura", 55, null , emptyList(), emptyList() )
         )
     }
 
@@ -44,7 +44,7 @@ class FakeDataSource(
 
     override fun getLastWeather(): Flow<Root> = flow {
         if (rootList.isEmpty()) {
-            emit(Root())
+            emit(Root(1, 20.0, 32.0, "mansoura", 55, null , emptyList(), emptyList() ))
         }
         emit(rootList.get(0))
     }

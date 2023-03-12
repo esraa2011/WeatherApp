@@ -105,4 +105,13 @@ dependencies {
     androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
+
+
+    androidTestImplementation 'androidx.test:core:1.1.0'
+// AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test:rules:1.1.1'
+// Espresso dependencies
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.1'
 }
