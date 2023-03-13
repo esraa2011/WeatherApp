@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -32,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.IOException
 import java.util.*
 
 
@@ -49,7 +52,9 @@ class HomeFragment : Fragment() {
     val PERMISSION_ID = 10
     lateinit var homeViewModel: HomeViewModel
     var flagFirstEnter: Boolean = true
+
     // var latLng = LatLng( 0.0,  0.0)
+//    lateinit var nameOfCity: String
 
 
     @SuppressLint("SetTextI18n")
@@ -82,6 +87,7 @@ class HomeFragment : Fragment() {
 
 
 
+
         lifecycleScope.launch {
 
             getLastMLocation()
@@ -89,18 +95,48 @@ class HomeFragment : Fragment() {
                 when (result) {
 
                     is ApiStateRoot.loading -> {
-                    //    binding.gifHome.visibility = View.VISIBLE
-                      //  binding.cardView.visibility = View.GONE
-              // binding.cardHome.visibility = View.GONE
+                        binding.gifHome.visibility = View.VISIBLE
+                        binding.cardView.visibility = View.GONE
+                        binding.cardViewWind.visibility = View.GONE
+                        binding.cardViewClouds.visibility = View.GONE
+                        binding.cardViewHumidity.visibility = View.GONE
+                        binding.cardViewUvi.visibility = View.GONE
+                        binding.cardViewPressure.visibility = View.GONE
+                        binding.cardViewVisibility.visibility = View.GONE
+
                     }
                     is ApiStateRoot.Success -> {
 
-                        //  getLastMLocation()
-                      //  binding.gifHome.visibility = View.GONE
-                     //   binding.cardView.visibility = View.VISIBLE
-                      //  binding.cardHome.visibility = View.VISIBLE
+                        binding.gifHome.visibility = View.GONE
+                        binding.cardView.visibility = View.VISIBLE
+                        binding.cardViewWind.visibility = View.VISIBLE
+                        binding.cardViewClouds.visibility = View.VISIBLE
+                        binding.cardViewHumidity.visibility = View.VISIBLE
+                        binding.cardViewUvi.visibility = View.VISIBLE
+                        binding.cardViewPressure.visibility = View.VISIBLE
+                        binding.cardViewVisibility.visibility = View.VISIBLE
+
+//                        val timeStamp = result.data.current?.dt?.times(1000)
+
+//                        val simpleDateFormatDate = SimpleDateFormat("dd MMM")
+//                        val date = simpleDateFormatDate.format(timeStamp)
+//
+//                        val simpleDateFormatTime = SimpleDateFormat("hh:mm aa")
+//                        val time = simpleDateFormatTime.format(timeStamp)
+
 
                         if (lang == "en" && unit == "metric") {
+
+                            binding.time.text =
+                                "${result.data.current?.let { Utility.timeStampMonth(it.dt) }},${
+                                    result.data.current?.let {
+                                        Utility.timeStampToHour(
+                                            it.dt
+                                        )
+                                    }
+                                }"
+
+
                             binding.area.text = result.data.timezone
                             binding.todayWeather.text =
                                 "${result.data.current?.temp?.toInt()} ℃"
@@ -121,6 +157,15 @@ class HomeFragment : Fragment() {
                                 result.data.current?.weather!![0].description
 
                         } else if (lang == "ar" && unit == "metric") {
+                            binding.time.text =
+                                "${result.data.current?.let { Utility.timeStampMonth(it.dt) }},${
+                                    result.data.current?.let {
+                                        Utility.timeStampToHour(
+                                            it.dt
+                                        )
+                                    }
+                                }"
+
                             binding.area.text = result.data.timezone
                             binding.todayWeather.text =
                                 result.data.current?.temp?.let { Utility.convertNumbersToArabic(it.toInt()) } + " س°"
@@ -143,6 +188,15 @@ class HomeFragment : Fragment() {
                                 result.data.current?.weather!![0].description
 
                         } else if (lang == "ar" && unit == "imperial") {
+                            binding.time.text =
+                                "${result.data.current?.let { Utility.timeStampMonth(it.dt) }},${
+                                    result.data.current?.let {
+                                        Utility.timeStampToHour(
+                                            it.dt
+                                        )
+                                    }
+                                }"
+
                             binding.area.text = result.data.timezone
                             binding.todayWeather.text =
                                 Utility.convertNumbersToArabic(result.data.current?.temp!!.toInt()) + "ف° "
@@ -163,6 +217,14 @@ class HomeFragment : Fragment() {
                                 result.data.current?.weather!![0].description
 
                         } else if (lang == "en" && unit == "imperial") {
+                            binding.time.text =
+                                "${result.data.current?.let { Utility.timeStampMonth(it.dt) }},${
+                                    result.data.current?.let {
+                                        Utility.timeStampToHour(
+                                            it.dt
+                                        )
+                                    }
+                                }"
                             binding.area.text = result.data.timezone
                             binding.todayWeather.text = "${result.data.current?.temp?.toInt()} ℉"
                             binding.pressureMeasure.text = "${result.data.current?.pressure} hPa"
@@ -177,11 +239,25 @@ class HomeFragment : Fragment() {
                             binding.visibilityMeasure.text =
                                 "${result.data.current?.visibility} %"
 
-                            binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current?.weather?.get(0)!!.icon))
+                            binding.todayWeatherImg.setImageResource(
+                                Utility.getWeatherIcon(
+                                    result.data.current?.weather?.get(
+                                        0
+                                    )!!.icon
+                                )
+                            )
                             binding.todayWeatherStatus.text =
                                 result.data.current?.weather!![0].description
 
                         } else if (lang == "en" && unit == "standard") {
+                            binding.time.text =
+                                "${result.data.current?.let { Utility.timeStampMonth(it.dt) }},${
+                                    result.data.current?.let {
+                                        Utility.timeStampToHour(
+                                            it.dt
+                                        )
+                                    }
+                                }"
                             binding.area.text = result.data.timezone
                             binding.todayWeather.text = "${result.data.current?.temp!!.toInt()}  °K"
                             binding.pressureMeasure.text = "${result.data.current?.pressure} hPa"
@@ -202,6 +278,14 @@ class HomeFragment : Fragment() {
                                 result.data.current?.weather!![0].description
 
                         } else if (lang == "ar" && unit == "standard") {
+                            binding.time.text =
+                                "${result.data.current?.let { Utility.timeStampMonth(it.dt) }},${
+                                    result.data.current?.let {
+                                        Utility.timeStampToHour(
+                                            it.dt
+                                        )
+                                    }
+                                }"
                             binding.todayWeather.text =
                                 result.data.current?.temp?.let { Utility.convertNumbersToArabic(it.toInt()) } + "ك°"
 
@@ -342,6 +426,26 @@ class HomeFragment : Fragment() {
             var latLng = LatLng(mLastLocation?.latitude ?: 0.0, mLastLocation?.longitude ?: 0.0)
             homeViewModel.getWeather(latLng)
             Log.i("mloc", "onLocationResult: first")
+//            var addressGeocoder: Geocoder = Geocoder(requireContext(), Locale.getDefault())
+//            try {
+//                var myAddress: List<Address> =
+//                    addressGeocoder.getFromLocation(
+//                        latLng.latitude,
+//                        latLng.longitude,
+//                        2
+//                    ) as List<Address>
+//                if (myAddress.isNotEmpty()) {
+//                    nameOfCity = "${myAddress[0].locality} "
+//
+//                }
+//            } catch (e: IOException) {
+//                e.printStackTrace()
+//                Snackbar.make(
+//                    requireView(),
+//                    getString(R.string.map_try),
+//                    Snackbar.LENGTH_LONG
+//                )
+//            }
         }
     }
 

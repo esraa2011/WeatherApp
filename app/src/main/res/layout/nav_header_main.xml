@@ -6,25 +6,23 @@
 
     android:gravity="bottom"
     android:orientation="vertical"
-
-    android:paddingTop="25dp"
-
+    android:background="@drawable/img_19"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/gif_splash"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
+<!--    <com.airbnb.lottie.LottieAnimationView-->
+<!--        android:id="@+id/gif_splash"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:scaleType="centerCrop"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintVertical_bias="1.0"-->
+<!--        app:lottie_autoPlay="true"-->
+<!--        app:lottie_loop="true"-->
 
-        app:lottie_rawRes="@raw/sunshine" />
+<!--        app:lottie_rawRes="@raw/background" />-->
 
 
 </LinearLayout>

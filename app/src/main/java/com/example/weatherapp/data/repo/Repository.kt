@@ -96,7 +96,7 @@ class Repository(
             remoteDataSource.getCurrentTempData(
                 latLng.latitude,
                 latLng.longitude,
-                "bec88e8dd2446515300a492c3862a10e",
+                "d9abb2c1d05c5882e937cffd1ecd4923",
                 unit,
                 language
             )
@@ -112,7 +112,7 @@ class Repository(
             remoteDataSource.getCurrentTempData(
                 latitude.toDouble(),
                 longitude.toDouble(),
-                "bec88e8dd2446515300a492c3862a10e",
+                "d9abb2c1d05c5882e937cffd1ecd4923",
                 unit,
                 language
             )
@@ -131,7 +131,7 @@ class Repository(
             remoteDataSource.getCurrentTempData(
                 favoriteWeatherPlacesModel.lat,
                 favoriteWeatherPlacesModel.lon,
-                "bec88e8dd2446515300a492c3862a10e",
+                "d9abb2c1d05c5882e937cffd1ecd4923",
                 unit,
                 language
             ).body().let {

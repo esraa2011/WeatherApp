@@ -3,15 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="70dp"
-    android:layout_height="150dp"
+    android:layout_height="130dp"
     android:layout_margin="8dp"
     android:padding="8dp"
-    app:cardBackgroundColor="#E6FFFFFF"
-    app:cardCornerRadius="50dp">
+    app:cardBackgroundColor="#A5CBF2"
+    app:cardCornerRadius="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/itemgrediant">
 
         <TextView
             android:id="@+id/timeInTemp"

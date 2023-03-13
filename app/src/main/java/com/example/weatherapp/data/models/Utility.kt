@@ -71,6 +71,11 @@ class Utility {
             var dateFormat: DateFormat = SimpleDateFormat("h:mm aa")
             return dateFormat.format(date)
         }
+        fun timeStampMonth(dt: Long): String {
+            var date: Date = Date(dt * 1000)
+            var dateFormat: DateFormat = SimpleDateFormat("dd MMM")
+            return dateFormat.format(date)
+        }
 
         fun timeStampToHourOneNumber(dt: Long): String {
             var date: Date = Date(dt * 1000)

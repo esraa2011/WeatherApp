@@ -6,13 +6,15 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:padding="10dp"
-    app:cardCornerRadius="50dp"
-    app:cardElevation="10dp"
+    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="#A5CBF2"
+    app:cardElevation="0dp"
     android:id="@+id/itemView">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="62dp">
+        android:layout_height="62dp"
+        android:background="@color/white">
 
         <ImageView
             android:id="@+id/deleteFromFav"
@@ -31,6 +33,7 @@
             android:layout_height="wrap_content"
             android:text="@string/mansoura"
             android:textSize="20sp"
+            android:textColor="@color/blue"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/deleteFromFav"
             app:layout_constraintHorizontal_bias="0.15"
