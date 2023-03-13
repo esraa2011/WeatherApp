@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
 import com.example.weatherapp.data.repo.Repository
+import com.example.weatherapp.data.repo.RepositoryOperation
 import com.example.weatherapp.ui.home.viewModel.ApiStateRoot
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
-class FavoriteViewModel(var repository: Repository) : ViewModel() {
+class FavoriteViewModel(var repository: RepositoryOperation) : ViewModel() {
 
 
     private var _favList = MutableStateFlow<ApiState>(ApiState.loading)
