@@ -4,14 +4,16 @@ import com.example.weatherapp.data.models.AlarmPojo
 import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
 import com.example.weatherapp.data.models.Root
 import com.example.weatherapp.data.repo.DataSource
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
 class LocalDataSource(
     private val alertDAO: AlertDAO,
     private val weatherDAO: WeatherDAO,
-    private val favoriteWeatherPlacesDAO: FavoriteWeatherPlacesDAO
-) : DataSource {
+    private val favoriteWeatherPlacesDAO: FavoriteWeatherPlacesDAO,
+
+    ) : DataSource {
     override suspend fun getCurrentTempData(
         latitude: Double,
         longitude: Double,
@@ -22,16 +24,20 @@ class LocalDataSource(
         TODO("Not yet implemented")
     }
 
-    override suspend fun insertAlert(alert: AlarmPojo) {
-        alertDAO.insertAlert(alert)
+    override fun getAllAlerts(): Flow<List<AlarmPojo>> {
+        return alertDAO.getAllAlerts()
     }
 
-    override fun getAlert(): Flow<List<AlarmPojo>> {
-        return alertDAO.getAlert()
+    override suspend fun insertAlert(alert: AlarmPojo): Long {
+        return alertDAO.insertAlert(alert)
     }
 
-    override suspend fun deleteAlert(alert: AlarmPojo) {
-        alertDAO.deleteAlert(alert)
+    override suspend fun deleteAlert(id: Int) {
+        alertDAO.deleteAlert(id)
+    }
+
+    override suspend fun getAlert(id: Int): AlarmPojo {
+        return alertDAO.getAlert(id)
     }
 
     override fun insertLastWeather(root: Root) {
@@ -57,5 +63,10 @@ class LocalDataSource(
     override suspend fun deletePlaceFromFavorite(favoriteWeatherPlacesModel: FavoriteWeatherPlacesModel) {
         favoriteWeatherPlacesDAO.deletePlaceFromFavorite(favoriteWeatherPlacesModel)
     }
+
+    override fun getWeatherAlert(latLng: LatLng): Flow<Root> {
+        TODO("Not yet implemented")
+    }
+
 
 }

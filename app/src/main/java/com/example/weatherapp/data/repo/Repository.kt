@@ -2,14 +2,9 @@ package com.example.weatherapp.data.repo
 
 import android.app.Application
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.provider.Settings
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat.startActivityForResult
-import com.example.weatherapp.R
 import com.example.weatherapp.data.db.AppDataBase
 import com.example.weatherapp.data.db.LocalDataSource
 import com.example.weatherapp.data.models.AlarmPojo
@@ -20,7 +15,6 @@ import com.example.weatherapp.data.network.RemoteDataSource
 import com.example.weatherapp.data.network.RetrofitHelper
 import com.example.weatherapp.data.network.RetrofitInterface
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -52,7 +46,30 @@ class Repository(
                 )
             }
         }
+
+        fun getInstance(context: Context): Repository {
+            return INSTANCE ?: synchronized(this) {
+                val room = AppDataBase.getInstance(context)
+                val retrofit = RetrofitHelper.getInstance()
+                val api = retrofit.create(RetrofitInterface::class.java)
+                val localDataSource = LocalDataSource(
+                    favoriteWeatherPlacesDAO = room.favoriteWeatherPlacesDAO(),
+                    alertDAO = room.AlertDAO(),
+                    weatherDAO = room.weatherDAO()
+                )
+
+                val remoteDataSource = RemoteDataSource(api = api)
+
+                Repository(
+                    remoteDataSource = remoteDataSource,
+                    localDataSource = localDataSource,
+                    context
+                )
+
+            }
+        }
     }
+
 
     lateinit var languageSharedPreferences: SharedPreferences
     lateinit var unitsShared: SharedPreferences
@@ -102,7 +119,7 @@ class Repository(
             remoteDataSource.getCurrentTempData(
                 latLng.latitude,
                 latLng.longitude,
-                "bec88e8dd2446515300a492c3862a10e",
+                "4a059725f93489b95183bbcb8c6829b9",
                 unit,
                 language
             )
@@ -118,7 +135,7 @@ class Repository(
             remoteDataSource.getCurrentTempData(
                 latitude.toDouble(),
                 longitude.toDouble(),
-                "bec88e8dd2446515300a492c3862a10e",
+                "4a059725f93489b95183bbcb8c6829b9",
                 unit,
                 language
             )
@@ -137,7 +154,7 @@ class Repository(
             remoteDataSource.getCurrentTempData(
                 favoriteWeatherPlacesModel.lat,
                 favoriteWeatherPlacesModel.lon,
-                "bec88e8dd2446515300a492c3862a10e",
+                "4a059725f93489b95183bbcb8c6829b9",
                 unit,
                 language
             ).body().let {
@@ -192,17 +209,39 @@ class Repository(
 
     }
 
-    override fun getAlert() =
-        localDataSource
-            .getAlert()
-
-    override suspend fun insertAlert(alert: AlarmPojo) {
-        localDataSource
-            .insertAlert(alert)
+    override fun getAllAlerts(): Flow<List<AlarmPojo>> {
+        return localDataSource.getAllAlerts()
     }
 
-    override suspend fun deleteAlert(alert: AlarmPojo) {
-        localDataSource
-            .deleteAlert(alert)
+    override suspend fun insertAlert(alert: AlarmPojo): Long {
+        return localDataSource.insertAlert(alert)
     }
+
+    override suspend fun deleteAlert(id: Int) {
+        localDataSource.deleteAlert(id)
+    }
+
+    override suspend fun getAlert(id: Int): AlarmPojo {
+        return localDataSource.getAlert(id)
+    }
+
+    override suspend fun getWeatherAlert(latLng: LatLng): Flow<Root> = flow {
+        updateSharedPreferance()
+        remoteDataSource.getCurrentTempData(
+            latLng.latitude,
+            latLng.longitude,
+//            "44c59959fbe6086cb77fb203967bbc0c",
+       //     "bec88e8dd2446515300a492c3862a10e",
+//            "d9abb2c1d05c5882e937cffd1ecd4923",
+            "4a059725f93489b95183bbcb8c6829b9",
+//            "f112a761188e9c22cdf3eb3a44597b00",
+            unit,
+            language
+        ).body().let {
+            if (it != null) {
+                emit(it)
+            }
+        }
+    }
+
 }

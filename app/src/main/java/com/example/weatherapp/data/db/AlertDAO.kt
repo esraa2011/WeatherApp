@@ -7,11 +7,14 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AlertDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-   suspend fun insertAlert(alert: AlarmPojo)
+    suspend fun insertAlert(alert: AlarmPojo): Long
 
     @Query("SELECT * FROM AlarmPojo")
-    fun getAlert(): Flow<List<AlarmPojo>>
+    fun getAllAlerts(): Flow<List<AlarmPojo>>
 
-    @Delete
-   suspend fun deleteAlert(alert: AlarmPojo)
+    @Query("DELETE FROM AlarmPojo WHERE id = :id")
+    suspend fun deleteAlert(id: Int)
+
+    @Query("SELECT * FROM AlarmPojo WHERE id = :id")
+    suspend fun getAlert(id: Int): AlarmPojo
 }

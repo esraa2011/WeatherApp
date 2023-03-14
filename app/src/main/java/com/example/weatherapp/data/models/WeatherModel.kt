@@ -2,6 +2,7 @@ package com.example.weatherapp.data.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "Root")
 data class Root(
@@ -12,10 +13,11 @@ data class Root(
     val timezone: String,
     val timezoneOffset: Long,
     var current: Current?,
-    var hourly: List<Current>? =null,
+    var hourly: List<Current>? = null,
     var daily: List<Daily>,
+    var alerts: List<Alerts>? = null
 
-    )
+)
 
 data class Current(
     val dt: Long,
@@ -104,11 +106,11 @@ data class Temp(
 )
 
 
-data class Alert(
-    val description: String,
-    val end: Int,
-    val event: String,
-    val senderName: String,
-    val start: Int,
-    val tags: List<String>
+data class Alerts(
+    var senderName: String? = null,
+    var event: String? = null,
+     var start: Long? = null,
+     var end: Long? = null,
+     var description: String? = null,
+     var tags: List<String>
 )

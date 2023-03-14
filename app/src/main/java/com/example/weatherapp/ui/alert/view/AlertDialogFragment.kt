@@ -7,11 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.work.*
 import com.example.weatherapp.R
 import com.example.weatherapp.data.models.AlarmPojo
 import com.example.weatherapp.data.models.Utility
@@ -19,14 +20,20 @@ import com.example.weatherapp.data.repo.Repository
 import com.example.weatherapp.databinding.FragmentAlertDialogBinding
 import com.example.weatherapp.ui.alert.viewModel.AlertFactoryViewModel
 import com.example.weatherapp.ui.alert.viewModel.AlertsViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class AlertDialogFragment : DialogFragment() {
     private var _binding: FragmentAlertDialogBinding? = null
     private val binding get() = _binding!!
     lateinit var factoryViewModel: AlertFactoryViewModel
-
+    var lat: Double = 0.0
+    var lon: Double = 0.0
+    var fromTime: Long = 0
+    var toTime: Long = 0
 
     companion object {
         fun newInstance() = AlertDialogFragment()
@@ -102,27 +109,33 @@ class AlertDialogFragment : DialogFragment() {
         }
 
         binding.timeStart.setOnClickListener {
-
-            val currentTime = Calendar.getInstance()
-            val startHour = currentTime.get(Calendar.HOUR_OF_DAY)
-            val startMinute = currentTime.get(Calendar.MINUTE)
+            val currentTime = android.icu.util.Calendar.getInstance()
+            val startHour = currentTime.get(android.icu.util.Calendar.HOUR_OF_DAY)
+            val startMinute = currentTime.get(android.icu.util.Calendar.MINUTE)
 
             TimePickerDialog(requireContext(), { view, hourOfDay, minute ->
+                fromTime = (TimeUnit.MINUTES.toSeconds(minute.toLong()) + TimeUnit.HOURS.toSeconds(
+                    hourOfDay.toLong()
+                ))
+                fromTime = fromTime.minus(3600L * 2)
                 binding.timeStart.text = "$hourOfDay : $minute "
-            }, startHour, startMinute, true).show()
+
+            }, startHour, startMinute, false).show()
         }
-
         binding.timeEnd.setOnClickListener {
-
-            val currentTime = Calendar.getInstance()
-            val startHour = currentTime.get(Calendar.HOUR_OF_DAY)
-            val startMinute = currentTime.get(Calendar.MINUTE)
+            val currentTime = android.icu.util.Calendar.getInstance()
+            val startHour = currentTime.get(android.icu.util.Calendar.HOUR_OF_DAY)
+            val startMinute = currentTime.get(android.icu.util.Calendar.MINUTE)
 
             TimePickerDialog(requireContext(), { view, hourOfDay, minute ->
+                toTime = (TimeUnit.MINUTES.toSeconds(minute.toLong()) + TimeUnit.HOURS.toSeconds(
+                    hourOfDay.toLong()
+                ))
+                toTime = toTime.minus(3600L * 2)
                 binding.timeEnd.text = "$hourOfDay : $minute "
-            }, startHour, startMinute, true).show()
-        }
 
+            }, startHour, startMinute, false).show()
+        }
 
         binding.zone.setOnClickListener { view ->
             NavHostFragment.findNavController(this)
@@ -137,56 +150,69 @@ class AlertDialogFragment : DialogFragment() {
 
             }
 
-
-
-        binding.save.setOnClickListener {
-            if (!binding.startDay.text.isEmpty() && !binding.endDay.text.isEmpty()
-                && !binding.timeStart.text.isEmpty() && !binding.timeEnd.text.isEmpty() && !binding.zone.text.isEmpty()
-            ) {
-                var alert = AlarmPojo(
-                    Utility.dateToLong(binding.startDay.text.toString()),
-                    Utility.dateToLong(binding.endDay.text.toString()),
-                    binding.timeStart.text.toString(),
-                    binding.timeEnd.text.toString(),
-                    binding.zone.text.toString()
-                )
-                viewModel.insertAlert(alert)
-                NavHostFragment.findNavController(this)
-                    .navigate(R.id.nav_alerts)
-            } else {
-
-//                if(binding.startDay.text.isEmpty()){
-//                    Toast.makeText(requireContext(), "Enter Start Day ", Toast.LENGTH_SHORT).show()
-//                }
-//                 if(binding.endDay.text.isEmpty()){
-//                    Toast.makeText(requireContext(), "Enter Start Day ", Toast.LENGTH_SHORT).show()
-//
-//                }
-//                 if(binding.timeStart.text.isEmpty()){
-//                    Toast.makeText(requireContext(), "Enter Start Time ", Toast.LENGTH_SHORT).show()
-//
-//                }
-//                if(binding.timeEnd.text.isEmpty()){
-//                    Toast.makeText(requireContext(), "Enter End Time ", Toast.LENGTH_SHORT).show()
-//
-//                }
-//                if(binding.zone.text.isEmpty()){
-//                    Toast.makeText(requireContext(), "Enter Zone ", Toast.LENGTH_SHORT).show()
-//
-//                }
-
-                Toast.makeText(requireContext(), "Enter  ", Toast.LENGTH_SHORT).show()
-                Toast.makeText(requireContext(), "Enter Data ", Toast.LENGTH_SHORT).show()
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Double>("lat")
+            ?.observe(
+                viewLifecycleOwner
+            ) { result ->
+                lat = result
+            }
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Double>("long")
+            ?.observe(
+                viewLifecycleOwner
+            ) { result ->
+                lon = result
             }
 
+        binding.save.setOnClickListener {
+            var alert = AlarmPojo(
+                Utility.dateToLong(binding.startDay.text.toString()),
+                Utility.dateToLong(binding.endDay.text.toString()),
+                (fromTime + 60),
+                (toTime + 60),
+                binding.zone.text.toString(),
+                latitude = lat,
+                longitude = lon
+            )
+            viewModel.insertAlert(alert)
+            NavHostFragment.findNavController(this)
+                .navigate(R.id.nav_alerts)
+
+        }
+        lifecycleScope.launch {
+            viewModel.stateInsetAlert.collectLatest { id ->
+                println(id)
+                // Register Worker Here and send ID of alert
+                setPeriodWorkManger(id, lat, lon)
+            }
         }
         return root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    private fun setPeriodWorkManger(id: Long, lat: Double, long: Double) {
 
+        val data = Data.Builder()
+        data.putLong("id", id)
+        data.putDouble("lat", lat)
+        data.putDouble("lon", long)
 
+        val constraints = Constraints.Builder()
+            .setRequiresBatteryNotLow(true)
+            .build()
+
+        val periodicWorkRequest = PeriodicWorkRequest.Builder(
+            AlertPeriodicWorkManger::class.java,
+            24, TimeUnit.HOURS
+        )
+            .setConstraints(constraints)
+            .setInputData(data.build())
+            .build()
+
+        WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
+            "$id",
+            ExistingPeriodicWorkPolicy.REPLACE,
+            periodicWorkRequest
+        )
     }
+
 
 }

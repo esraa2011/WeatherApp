@@ -4,6 +4,7 @@ import com.example.weatherapp.data.models.AlarmPojo
 import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
 import com.example.weatherapp.data.models.Root
 import com.example.weatherapp.data.repo.DataSource
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
@@ -29,17 +30,22 @@ class RemoteDataSource(
         )
     }
 
-    override suspend fun insertAlert(alert: AlarmPojo) {
+    override fun getAllAlerts(): Flow<List<AlarmPojo>> {
         TODO("Not yet implemented")
     }
 
-    override fun getAlert(): Flow<List<AlarmPojo>> {
+    override suspend fun insertAlert(alert: AlarmPojo): Long {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteAlert(alert: AlarmPojo) {
+    override suspend fun deleteAlert(id: Int) {
         TODO("Not yet implemented")
     }
+
+    override suspend fun getAlert(id: Int): AlarmPojo {
+        TODO("Not yet implemented")
+    }
+
 
     override fun insertLastWeather(root: Root) {
         TODO("Not yet implemented")
@@ -62,6 +68,10 @@ class RemoteDataSource(
     }
 
     override suspend fun deletePlaceFromFavorite(favoriteWeatherPlacesModel: FavoriteWeatherPlacesModel) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getWeatherAlert(latLng: LatLng): Flow<Root> {
         TODO("Not yet implemented")
     }
 }

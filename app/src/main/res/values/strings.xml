@@ -81,4 +81,6 @@
     <string name="egypt">Egypt</string>
     <string name="save">Save</string>
     <string name="date_from">Date From</string>
+    <string name="channel_name">"Weather App Notification "</string>
+    <string name="channel_description">Alert Notification</string>
 </resources>

@@ -12,7 +12,7 @@ class AlertFactoryViewModel(
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(AlertsViewModel::class.java)) {
-            AlertsViewModel (repository) as T
+            AlertsViewModel(this.repository) as T
         } else {
             throw IllegalAccessException("ViewModel Class Not Founded")
         }

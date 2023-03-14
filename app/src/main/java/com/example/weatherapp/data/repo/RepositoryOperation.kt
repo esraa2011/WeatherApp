@@ -1,6 +1,5 @@
 package com.example.weatherapp.data.repo
 
-import android.content.Intent
 import com.example.weatherapp.data.models.AlarmPojo
 import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
 import com.example.weatherapp.data.models.Root
@@ -22,10 +21,12 @@ interface RepositoryOperation {
     suspend fun deleteCurrentWeather()
 
     suspend fun getWeather(latLng: LatLng): Flow<Root>
-    fun getAlert(): Flow<List<AlarmPojo>>
 
-    suspend fun insertAlert(alert: AlarmPojo)
+    suspend fun deleteAlert(id: Int)
+    suspend fun insertAlert(alert: AlarmPojo): Long
+    fun getAllAlerts(): Flow<List<AlarmPojo>>
+    suspend fun getAlert(id: Int): AlarmPojo
+    suspend fun getWeatherAlert(latLng: LatLng): Flow<Root>
 
-    suspend fun deleteAlert(alert: AlarmPojo)
 
 }

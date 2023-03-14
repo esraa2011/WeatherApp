@@ -1,5 +1,6 @@
 package com.example.weatherapp.data.models
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
@@ -32,6 +33,9 @@ class Utility {
         const val GPS = "gps"
         const val LATITUDE_KEY = "Latitude"
         const val LONGITUDE_KEY = "Longitude"
+        const val NOTIFICATION_KEY: String = "Notification"
+        const val notificationEnable: String = "enable"
+        const val notificationDis: String = "disable"
 
 
         fun timeStampToDay(dt: Long): String {
@@ -66,11 +70,13 @@ class Utility {
             return imageInInteger
         }
 
+
         fun timeStampToHour(dt: Long): String {
             var date: Date = Date(dt * 1000)
             var dateFormat: DateFormat = SimpleDateFormat("h:mm aa")
             return dateFormat.format(date)
         }
+
         fun timeStampMonth(dt: Long): String {
             var date: Date = Date(dt * 1000)
             var dateFormat: DateFormat = SimpleDateFormat("dd MMM")
@@ -150,6 +156,15 @@ class Utility {
             editor.apply()
         }
 
+        fun saveNotificationToSharedPref(context: Context, key: String, value: String) {
+            val editor: SharedPreferences.Editor = context.getSharedPreferences(
+                "Notification",
+                AppCompatActivity.MODE_PRIVATE
+            ).edit()
+            editor.putString(key, value)
+            editor.apply()
+        }
+
         fun convertNumbersToArabic(value: Int): String {
             return (value.toString() + "")
                 .replace("1".toRegex(), "١").replace("2".toRegex(), "٢")
@@ -205,8 +220,18 @@ class Utility {
             return ((hour * 60 + min) * 60 * 1000).toLong()
         }
 
+        @SuppressLint("SimpleDateFormat")
+        fun convertDateToLong(date: String): Long {
+            val df = SimpleDateFormat("HH : mm")
+            return df.parse(date).time
+        }
+
+        fun convertDateToLong(date: String,context: Context): Long {
+            val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
+            val timestamp: Date = simpleDateFormat.parse(date) as Date
+            return timestamp.time
+        }
+
 
     }
-
-
 }

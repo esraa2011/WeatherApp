@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.work.WorkManager
 import com.example.weatherapp.R
 import com.example.weatherapp.data.repo.Repository
 import com.example.weatherapp.databinding.AlertFragmentBinding
@@ -49,6 +50,11 @@ class AlertsFragment : Fragment() {
             Navigation.findNavController(view)
                 .navigate(R.id.action_nav_alerts_to_alertDialogFragment)
         }
+
+
+
+
+
         lifecycleScope.launchWhenStarted {
             alertsViewModel.alertList.collectLatest {
 
@@ -61,6 +67,7 @@ class AlertsFragment : Fragment() {
                         adapter =
                             AlertAdapter(it.data) { it ->
                                 alertsViewModel.deleteAlert(it)
+                                WorkManager.getInstance().cancelAllWorkByTag("${it.id}")
 
                             }
 

@@ -14,7 +14,7 @@ import com.example.weatherapp.data.models.Root
 
 @Database(
     entities = [Root::class, FavoriteWeatherPlacesModel::class, AlarmPojo::class],
-    version = 2
+    version =4
 )
 @TypeConverters(Converters::class)
 abstract class AppDataBase : RoomDatabase() {
@@ -31,6 +31,7 @@ abstract class AppDataBase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext, AppDataBase::class.java, "FavoritePlaces_database"
                 )
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance
