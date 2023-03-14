@@ -2,9 +2,14 @@ package com.example.weatherapp.data.repo
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.provider.Settings
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat.startActivityForResult
+import com.example.weatherapp.R
 import com.example.weatherapp.data.db.AppDataBase
 import com.example.weatherapp.data.db.LocalDataSource
 import com.example.weatherapp.data.models.AlarmPojo
@@ -15,6 +20,7 @@ import com.example.weatherapp.data.network.RemoteDataSource
 import com.example.weatherapp.data.network.RetrofitHelper
 import com.example.weatherapp.data.network.RetrofitInterface
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -96,7 +102,7 @@ class Repository(
             remoteDataSource.getCurrentTempData(
                 latLng.latitude,
                 latLng.longitude,
-                "d9abb2c1d05c5882e937cffd1ecd4923",
+                "bec88e8dd2446515300a492c3862a10e",
                 unit,
                 language
             )
@@ -112,7 +118,7 @@ class Repository(
             remoteDataSource.getCurrentTempData(
                 latitude.toDouble(),
                 longitude.toDouble(),
-                "d9abb2c1d05c5882e937cffd1ecd4923",
+                "bec88e8dd2446515300a492c3862a10e",
                 unit,
                 language
             )
@@ -131,7 +137,7 @@ class Repository(
             remoteDataSource.getCurrentTempData(
                 favoriteWeatherPlacesModel.lat,
                 favoriteWeatherPlacesModel.lon,
-                "d9abb2c1d05c5882e937cffd1ecd4923",
+                "bec88e8dd2446515300a492c3862a10e",
                 unit,
                 language
             ).body().let {

@@ -22,7 +22,9 @@
     <style name="Theme.WeatherApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.WeatherApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/app_color</item>
+    </style>
     <style name="Theme.WeatherApp.Dialog"
         parent="Base.Theme.MaterialComponents.Light.Dialog">
         <item name="android:windowNoTitle">true</item>

@@ -1,6 +1,9 @@
 package com.example.weatherapp.ui.favorite.view
 
+
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,12 +14,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.example.weatherapp.R
-import com.example.weatherapp.databinding.FavoriteFragmentBinding
 import com.example.weatherapp.data.repo.Repository
+import com.example.weatherapp.databinding.FavoriteFragmentBinding
 import com.example.weatherapp.ui.favorite.viewModel.ApiState
 import com.example.weatherapp.ui.favorite.viewModel.FavoriteFactoryViewModel
-
-
 import com.example.weatherapp.ui.favorite.viewModel.FavoriteViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -60,9 +61,27 @@ class FavoriteFragment : Fragment() {
 
                         adapter =
                             FavoriteAdapter(it.data, { it ->
-                                favoriteViewModel.deleteFavoriteWeather(it)
+                                val alert: AlertDialog.Builder =
+                                    AlertDialog.Builder(requireActivity(),R.style.MyDialogTheme)
+
+                                alert.setTitle("Warning")
+                                alert.setMessage("Do You want to delete this item  from favorite")
+                                alert.setIcon(R.drawable.img_22)
+                                alert.setPositiveButton("Delete") { _: DialogInterface, _: Int ->
+                                    favoriteViewModel.deleteFavoriteWeather(it)
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Item has been Deleted",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+
+                                }
+
+                                val dialog = alert.create()
+                                dialog.show()
 
                             })
+
                             { it ->
                                 favoriteViewModel.getAllFavoritePlacesDetails(it)
                                 val bundle = Bundle()

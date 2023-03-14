@@ -66,24 +66,27 @@ class FavoritePlacesDetailsFragment : Fragment() {
         lifecycleScope.launch {
             favoriteViewModel.root.collectLatest { result ->
                 when (result) {
+
+                    is ApiStateRoot.loading -> {
+                        binding.gifHome.visibility = View.VISIBLE
+                        binding.cardView.visibility = View.GONE
+                        binding.cardViewWind.visibility = View.GONE
+                        binding.cardViewClouds.visibility = View.GONE
+                        binding.cardViewHumidity.visibility = View.GONE
+                        binding.cardViewUvi.visibility = View.GONE
+                        binding.cardViewPressure.visibility = View.GONE
+                        binding.cardViewVisibility.visibility = View.GONE
+
+                    }
                     is ApiStateRoot.Success -> {
-//                        dailyAdapter =
-//                            DailyAdapter(result.data.daily, requireContext())
-//                        binding.homeRecycleDaily.adapter = dailyAdapter
-//                        binding.pressureMeasure.text = result.data.current.pressure.toString()
-//                        binding.humidityMeasure.text = result.data.current.humidity.toString()
-//                        binding.cloudMeasure.text = result.data.current.clouds.toString()
-//                        binding.visibilityMeasure.text = result.data.current.visibility.toString()
-//                        binding.windMeasure.text = result.data.current.windSpeed.toString()
-//                        binding.violateMeasure.text = result.data.current.uvi.toString()
-//                        binding.todayWeatherImg.setImageResource(Utility.getWeatherIcon(result.data.current.weather[0].icon))
-//                        binding.todayWeather.text =
-//                            "${result.data.current.temp.toInt()} °C"
-//                        binding.todayWeatherStatus.text = result.data.current.weather[0].description
-//
-//                        hoursAdapter =
-//                            HoursAdapter(result.data.hourly, requireContext())
-//                        binding.homeRecycleHours.adapter = hoursAdapter
+                        binding.gifHome.visibility = View.GONE
+                        binding.cardView.visibility = View.VISIBLE
+                        binding.cardViewWind.visibility = View.VISIBLE
+                        binding.cardViewClouds.visibility = View.VISIBLE
+                        binding.cardViewHumidity.visibility = View.VISIBLE
+                        binding.cardViewUvi.visibility = View.VISIBLE
+                        binding.cardViewPressure.visibility = View.VISIBLE
+                        binding.cardViewVisibility.visibility = View.VISIBLE
 
                         dailyAdapter =
                             DailyAdapter(result.data.daily, requireContext())
@@ -94,6 +97,15 @@ class FavoritePlacesDetailsFragment : Fragment() {
                         binding.homeRecycleHours.adapter = hoursAdapter
 
                         if (lang == "en" && unit == "metric") {
+                            binding.time.text =
+                                "${result.data.current?.let { Utility.timeStampMonth(it.dt) }},${
+                                    result.data.current?.let {
+                                        Utility.timeStampToHour(
+                                            it.dt
+                                        )
+                                    }
+                                }"
+                            binding.area.text = result.data.timezone
                             binding.todayWeather.text =
                                 "${result.data.current?.temp!!.toInt()} ℃"
                             binding.pressureMeasure.text = "${result.data.current?.pressure} hPa"
@@ -113,6 +125,15 @@ class FavoritePlacesDetailsFragment : Fragment() {
                                 result.data.current?.weather!![0].description
 
                         } else if (lang == "ar" && unit == "metric") {
+                            binding.time.text =
+                                "${result.data.current?.let { Utility.timeStampMonth(it.dt) }},${
+                                    result.data.current?.let {
+                                        Utility.timeStampToHour(
+                                            it.dt
+                                        )
+                                    }
+                                }"
+                            binding.area.text = result.data.timezone
                             binding.todayWeather.text =
                                 Utility.convertNumbersToArabic(result.data.current?.temp!!.toInt()) + " س°"
 
@@ -134,6 +155,15 @@ class FavoritePlacesDetailsFragment : Fragment() {
                                 result.data.current!!.weather[0].description
 
                         } else if (lang == "ar" && unit == "imperial") {
+                            binding.time.text =
+                                "${result.data.current?.let { Utility.timeStampMonth(it.dt) }},${
+                                    result.data.current?.let {
+                                        Utility.timeStampToHour(
+                                            it.dt
+                                        )
+                                    }
+                                }"
+                            binding.area.text = result.data.timezone
                             binding.todayWeather.text =
                                 Utility.convertNumbersToArabic(result.data.current!!.temp.toInt()) + "ف° "
                             binding.pressureMeasure.text =
@@ -153,6 +183,15 @@ class FavoritePlacesDetailsFragment : Fragment() {
                                 result.data.current!!.weather[0].description
 
                         } else if (lang == "en" && unit == "imperial") {
+                            binding.time.text =
+                                "${result.data.current?.let { Utility.timeStampMonth(it.dt) }},${
+                                    result.data.current?.let {
+                                        Utility.timeStampToHour(
+                                            it.dt
+                                        )
+                                    }
+                                }"
+                            binding.area.text = result.data.timezone
                             binding.todayWeather.text = "${result.data.current!!.temp.toInt()} ℉"
                             binding.pressureMeasure.text = "${result.data.current!!.pressure} hPa"
                             binding.humidityMeasure.text =
@@ -171,6 +210,15 @@ class FavoritePlacesDetailsFragment : Fragment() {
                                 result.data.current!!.weather[0].description
 
                         } else if (lang == "en" && unit == "standard") {
+                            binding.time.text =
+                                "${result.data.current?.let { Utility.timeStampMonth(it.dt) }},${
+                                    result.data.current?.let {
+                                        Utility.timeStampToHour(
+                                            it.dt
+                                        )
+                                    }
+                                }"
+                            binding.area.text = result.data.timezone
                             binding.todayWeather.text = "${result.data.current!!.temp.toInt()} °K"
                             binding.pressureMeasure.text = "${result.data.current!!.pressure} hPa"
                             binding.humidityMeasure.text =
@@ -190,6 +238,15 @@ class FavoritePlacesDetailsFragment : Fragment() {
                                 result.data.current?.weather!![0].description
 
                         } else if (lang == "ar" && unit == "standard") {
+                            binding.time.text =
+                                "${result.data.current?.let { Utility.timeStampMonth(it.dt) }},${
+                                    result.data.current?.let {
+                                        Utility.timeStampToHour(
+                                            it.dt
+                                        )
+                                    }
+                                }"
+                            binding.area.text = result.data.timezone
                             binding.todayWeather.text =
                                 Utility.convertNumbersToArabic(result.data.current!!.temp.toInt()) + "ك°"
 
@@ -225,9 +282,6 @@ class FavoritePlacesDetailsFragment : Fragment() {
                                     ), 0
                                 );
                             }).show()
-                    }
-                    else -> {
-
                     }
                 }
             }

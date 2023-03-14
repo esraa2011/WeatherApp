@@ -251,10 +251,11 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         favoriteWeatherPlacesModel: FavoriteWeatherPlacesModel,
         placeName: String
     ) {
-        val alert: AlertDialog.Builder = AlertDialog.Builder(requireActivity())
+        val alert: AlertDialog.Builder = AlertDialog.Builder(requireActivity(),R.style.MyDialogTheme)
 
         alert.setTitle("Favorite")
         alert.setMessage("Do You want to save ${placeName} on favorite")
+        alert.setIcon(R.drawable.applicatiion_icon)
         alert.setPositiveButton("Save") { _: DialogInterface, _: Int ->
 
             favoriteViewModel.insertFavoriteWeather(favoriteWeatherPlacesModel)

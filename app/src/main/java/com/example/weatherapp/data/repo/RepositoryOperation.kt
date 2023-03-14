@@ -1,5 +1,6 @@
 package com.example.weatherapp.data.repo
 
+import android.content.Intent
 import com.example.weatherapp.data.models.AlarmPojo
 import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
 import com.example.weatherapp.data.models.Root
@@ -26,4 +27,5 @@ interface RepositoryOperation {
     suspend fun insertAlert(alert: AlarmPojo)
 
     suspend fun deleteAlert(alert: AlarmPojo)
+
 }

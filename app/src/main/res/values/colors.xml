@@ -10,4 +10,5 @@
     <color name="transparent">#2EFFFFFF</color>
     <color name="blue">#1b1b3a</color>
     <color name="red">#0066b3</color>
+    <color name="app_color">#A5CBF2</color>
 </resources>
