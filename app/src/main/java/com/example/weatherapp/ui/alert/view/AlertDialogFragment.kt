@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TimePicker
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -15,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.work.*
 import com.example.weatherapp.R
 import com.example.weatherapp.data.models.AlarmPojo
-import com.example.weatherapp.data.models.Utility
 import com.example.weatherapp.data.repo.Repository
 import com.example.weatherapp.databinding.FragmentAlertDialogBinding
 import com.example.weatherapp.ui.alert.viewModel.AlertFactoryViewModel
@@ -82,8 +82,14 @@ class AlertDialogFragment : DialogFragment() {
         }
 
         binding.save.setOnClickListener {
-            viewModel.insertAlert(alert)
-            dialog!!.dismiss()
+            if (binding.startDay.text.isEmpty() || binding.endDay.text.isEmpty() || binding.zone.text.isEmpty()) {
+                Toast.makeText(requireContext(), getString(R.string.Enter_Data_In_Empty_Field), Toast.LENGTH_LONG)
+                    .show()
+            } else {
+                viewModel.insertAlert(alert)
+                dialog!!.dismiss()
+            }
+
         }
 
         binding.zone.setOnClickListener { view ->
@@ -112,25 +118,9 @@ class AlertDialogFragment : DialogFragment() {
                 lon = result
             }
 
-//        binding.save.setOnClickListener {
-//            alert = AlarmPojo(
-//                Utility.dateToLong(binding.startDay.text.toString()),
-//                Utility.dateToLong(binding.endDay.text.toString()),
-//                (fromTime + 60),
-//                (toTime + 60),
-//                binding.zone.text.toString(),
-//                latitude = lat,
-//                longitude = lon
-//            )
-//            viewModel.insertAlert(alert)
-//            NavHostFragment.findNavController(this)
-//                .navigate(R.id.nav_alerts)
-//
-//        }
         lifecycleScope.launch {
             viewModel.stateInsetAlert.collectLatest { id ->
                 println(id)
-                // Register Worker Here and send ID of alert
                 setPeriodWorkManger(id, lat, lon)
             }
         }
@@ -190,8 +180,8 @@ class AlertDialogFragment : DialogFragment() {
             listener, currentHour, currentMinute, false
         )
 
-        timePickerDialog.setTitle("Choose time")
-       // timePickerDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        timePickerDialog.setTitle(getString(R.string.choose))
+        // timePickerDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         timePickerDialog.show()
     }
 
@@ -211,28 +201,28 @@ class AlertDialogFragment : DialogFragment() {
             requireContext(),
             myDateListener, year, month, day
         )
-        datePickerDialog.setTitle("Choose date")
-      //  datePickerDialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+        datePickerDialog.setTitle(getString(R.string.Choose_date))
+        //  datePickerDialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
         datePickerDialog.show()
     }
 
     private fun setInitialData() {
         val rightNow = Calendar.getInstance()
-        // init time
+
         val currentHour = TimeUnit.HOURS.toSeconds(rightNow.get(Calendar.HOUR_OF_DAY).toLong())
         val currentMinute = TimeUnit.MINUTES.toSeconds(rightNow.get(Calendar.MINUTE).toLong())
         val currentTime = (currentHour + currentMinute).minus(3600L * 2)
         val currentTimeText = timeConverterToString((currentTime + 60), requireContext())
         val afterOneHour = currentTime.plus(3600L)
         val afterOneHourText = timeConverterToString(afterOneHour, requireContext())
-        // init day
+
         val year = rightNow.get(Calendar.YEAR)
         val month = rightNow.get(Calendar.MONTH)
         val day = rightNow.get(Calendar.DAY_OF_MONTH)
         val date = "$day/${month + 1}/$year"
         val dayNow = convertDateToLong(date, requireContext())
         val currentDate = dayConverterToString(dayNow, requireContext())
-        //init model
+
         alert =
             AlarmPojo(
 
@@ -244,7 +234,7 @@ class AlertDialogFragment : DialogFragment() {
                 latitude = lat,
                 longitude = lon
             )
-        //init text
+
         binding.startDay.text = currentDate.plus("\n").plus(currentTimeText)
         binding.endDay.text = currentDate.plus("\n").plus(afterOneHourText)
     }

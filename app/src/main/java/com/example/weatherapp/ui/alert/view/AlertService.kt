@@ -62,6 +62,7 @@ class AlertService : Service() {
             )
             .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
             .setAutoCancel(true)
+            .setOngoing(false)
             .build()
     }
 

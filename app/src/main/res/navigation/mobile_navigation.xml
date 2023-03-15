@@ -48,7 +48,7 @@
     <fragment
         android:id="@+id/Nav_map"
         android:name="com.example.weatherapp.ui.favorite.view.MapsFragment"
-        android:label="Map"
+        android:label="@string/map_name"
         tools:layout="@layout/fragment_maps" />
     <fragment
         android:id="@+id/favoritePlacesDetailsFragment"

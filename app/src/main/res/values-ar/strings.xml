@@ -50,4 +50,26 @@
     <string name="humidity_tv">الرطوبة</string>
     <string name="settingMap">الخريطة</string>
     <string name="no_internet_txt">لا يوجد اتصال بالانترنت !</string>
+    <string name="from">من</string>
+    <string name="to">الي</string>
+    <string name="date">التاريخ</string>
+    <string name="zone">المنطقة</string>
+    <string name="egypt">مصر</string>
+    <string name="save">حفظ</string>
+    <string name="date_from">Date From</string>
+    <string name="channel_name">"اشعارات الطقس "</string>
+    <string name="channel_description">منبة الطقس</string>
+    <string name="map_name">الخريطة</string>
+    <string name="choose">اختر وقت</string>
+    <string name="Choose_date">اختر يوم</string>
+    <string name="Enter_Data_In_Empty_Field">ادخل البيانات في الاماكن الفارغه </string>
+    <string name="Warning">تحذير</string>
+    <string name="Do_You">هل ترغب في حذف هذا العنصر من المفضلة</string>
+    <string name="Delete">حذف</string>
+    <string name="Item">تم الحذف</string>
+    <string name="error">خطأ</string>
+    <string name="Saved">تم الحفظ</string>
+    <string name="Favorite">المفضلة</string>
+    <string name="Save">حفظ</string>
+    <string name="Data">تم الحفظ</string>
 </resources>

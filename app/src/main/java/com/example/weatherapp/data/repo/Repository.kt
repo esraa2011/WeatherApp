@@ -119,7 +119,7 @@ class Repository(
             remoteDataSource.getCurrentTempData(
                 latLng.latitude,
                 latLng.longitude,
-                "4a059725f93489b95183bbcb8c6829b9",
+                "698e3af38374a53ef1b6cc63e337b71c",
                 unit,
                 language
             )
@@ -135,7 +135,7 @@ class Repository(
             remoteDataSource.getCurrentTempData(
                 latitude.toDouble(),
                 longitude.toDouble(),
-                "4a059725f93489b95183bbcb8c6829b9",
+                "698e3af38374a53ef1b6cc63e337b71c",
                 unit,
                 language
             )
@@ -154,7 +154,7 @@ class Repository(
             remoteDataSource.getCurrentTempData(
                 favoriteWeatherPlacesModel.lat,
                 favoriteWeatherPlacesModel.lon,
-                "4a059725f93489b95183bbcb8c6829b9",
+                "698e3af38374a53ef1b6cc63e337b71c",
                 unit,
                 language
             ).body().let {
@@ -230,12 +230,14 @@ class Repository(
         remoteDataSource.getCurrentTempData(
             latLng.latitude,
             latLng.longitude,
-//            "44c59959fbe6086cb77fb203967bbc0c",
-       //     "bec88e8dd2446515300a492c3862a10e",
-//            "d9abb2c1d05c5882e937cffd1ecd4923",
-            "4a059725f93489b95183bbcb8c6829b9",
-//            "f112a761188e9c22cdf3eb3a44597b00",
-            unit,
+
+            //"44c59959fbe6086cb77fb203967bbc0c",
+            //          "bec88e8dd2446515300a492c3862a10e",
+            //"d9abb2c1d05c5882e937cffd1ecd4923",
+            // "4a059725f93489b95183bbcb8c6829b9",
+            //  "f112a761188e9c22cdf3eb3a44597b00",
+            "698e3af38374a53ef1b6cc63e337b71c",
+                    unit,
             language
         ).body().let {
             if (it != null) {

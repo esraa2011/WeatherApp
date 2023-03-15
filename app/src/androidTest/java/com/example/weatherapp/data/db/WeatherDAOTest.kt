@@ -49,8 +49,9 @@ class WeatherDAOTest {
     @Test
     fun insertLastWeather_insertItem_returnItem() = runTest {
         //Given
-        val data = Root(1, 20.0, 32.0, "egypt", 55, null, emptyList(), emptyList())
+       // val data = Root(1, 20.0, 32.0, "egypt", 55, hourly =  emptyList(), daily = emptyList(), alerts =  null, current = null)
 
+        val data = Root(46, 655.0, 584.00, "egypt", 565, null, emptyList(), emptyList(), emptyList())
 
         dao.insertLastWeather(data)
 
@@ -65,7 +66,7 @@ class WeatherDAOTest {
     @Test
     fun getLastWeather_insertWeather_CountOfItemsSame() = runBlockingTest {
         //Given
-        val data = Root(1, 20.0, 32.0, "egypt", 55, null, emptyList(), emptyList())
+        val data = Root(1, 20.0, 32.0, "egypt", 55, null, emptyList(), emptyList(), emptyList())
 
 
         dao.insertLastWeather(data)
@@ -83,7 +84,7 @@ class WeatherDAOTest {
     fun deleteCurrentWeather_deleteItem_checkIsNull() = runBlockingTest() {
 
         //Given
-        val data = Root(1, 20.0, 32.0, "egypt", 55, null, emptyList(), emptyList())
+        val data = Root(1, 20.0, 32.0, "egypt", 55, null, emptyList(), emptyList(), emptyList())
         dao.insertLastWeather(data)
 
         //When

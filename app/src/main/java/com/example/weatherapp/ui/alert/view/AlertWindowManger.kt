@@ -21,19 +21,18 @@ class AlertWindowManger(private val context: Context, private val description: S
 
     fun initializeWindowManager() {
 
-        // Inflate UI and Use View Binding
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         view = inflater.inflate(R.layout.alert_display, null)
         binding = AlertDisplayBinding.bind(view)
 
-        // Set Data
+
         binding.textDescription.text = description
         binding.btnOk.setOnClickListener {
             closeWindowManger()
             closeService()
         }
 
-        // Initialize View
+
         val LAYOUT_FLAG: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {

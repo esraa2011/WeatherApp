@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
 //        this.recreate()
 //    }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LocaleManager.setLocale(this)

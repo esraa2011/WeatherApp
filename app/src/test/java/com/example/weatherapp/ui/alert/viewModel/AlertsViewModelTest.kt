@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.favorite.viewModel
+package com.example.weatherapp.ui.alert.viewModel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -6,14 +6,14 @@ import com.example.weatherapp.data.models.AlarmPojo
 import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
 import com.example.weatherapp.data.models.Root
 import com.example.weatherapp.data.repo.FakeRepository
+import com.example.weatherapp.data.repo.Repository
 import com.example.weatherapp.data.repo.RepositoryOperation
-import com.example.weatherapp.ui.home.viewModel.ApiStateRoot
+import com.example.weatherapp.ui.favorite.viewModel.FavoriteViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runBlockingTest
-import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert
-import org.hamcrest.core.IsNull
+import org.hamcrest.core.Is
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
@@ -24,12 +24,13 @@ import org.robolectric.annotation.Config
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
-@Config(manifest = Config.NONE)
-class FavoriteViewModelTest {
-    @ExperimentalCoroutinesApi
+@Config(manifest= Config.NONE)
+class AlertsViewModelTest {
+
 
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
+
 
     // Fake Data
     private var favoriteList: MutableList<FavoriteWeatherPlacesModel> =
@@ -51,78 +52,58 @@ class FavoriteViewModelTest {
         AlarmPojo(12, 13, 12, 12,"egypt"),
         AlarmPojo(12, 13, 12, 12,"egypt"),
 
-    )
+        )
     private var weatherResponse: Root =
         Root(1, 12.0, 13.0, "asdjadsk", 565, null, emptyList(), emptyList(), emptyList())
     private lateinit var repository: RepositoryOperation
     private lateinit var favouriteViewModel: FavoriteViewModel
+    private lateinit var alertsViewModel:AlertsViewModel
 
     @Before
     fun initFavouriteViewModelTest(){
         repository = FakeRepository(favoriteList,alertList,weatherResponse)
-        favouriteViewModel = FavoriteViewModel(repository)
-    }
-    @Test
-    fun insertFavoriteWeather_insertItem_increaseSizeOfList() = runBlockingTest{
-        //Given
-        favouriteViewModel.insertFavoriteWeather(favoriteWeatherPlacesModel = favoriteList[0])
-        //When
-        favouriteViewModel.getAllFavoritePlaces()
-
-        favouriteViewModel.favList.first()
-        //Then
-        MatcherAssert.assertThat(favoriteList.size , `is` (5))
+        alertsViewModel = AlertsViewModel(repository)
     }
 
     @Test
-    fun deleteFavoriteWeather_deleteItem_decreaseSizeOfList()  = runBlockingTest{
+    fun getAllAlerts_checkEqualityOfSize() = runBlockingTest{
         //Given
-        favouriteViewModel.deleteFavoriteWeather(favoriteWeatherPlacesModel = favoriteList[0])
+        alertsViewModel.getAllAlerts()
+        var data : List<AlarmPojo> = emptyList()
         //When
-        favouriteViewModel.getAllFavoritePlaces()
-
-        favouriteViewModel.favList.first()
-        //Then
-        MatcherAssert.assertThat(favoriteList.size , `is` (3))
-    }
-    @Test
-    fun getAllFavoritePlacesDetails_checkIfNotNull()= runBlockingTest{
-        //Given
-        favouriteViewModel.getAllFavoritePlacesDetails(favoriteWeatherPlacesModel = favoriteList[0])
-        var data : Root = weatherResponse
-        //When
-        val result = favouriteViewModel.root.first()
+        val result = alertsViewModel.alertList.first()
         when(result){
-            is ApiStateRoot.Success -> {
+            is AlertState.Success -> {
                 data = result.data
             }
-            is ApiStateRoot.Failure -> {
+            is AlertState.Failure -> {
             }
             else -> {
             }
         }
         //Then
-        MatcherAssert.assertThat(data , IsNull.notNullValue())
+        MatcherAssert.assertThat(data.size , Is.`is`(6))
     }
+
     @Test
-    fun getAllFavouritePlaces_checkEqualityOfSize() = runBlockingTest{
+    fun insertAlert_insertItem_increaseSizeOfList() = runBlockingTest{
         //Given
-        favouriteViewModel.getAllFavoritePlaces()
-        var data : List<FavoriteWeatherPlacesModel> = emptyList()
+        alertsViewModel.insertAlert(alertList[0])
         //When
-        val result = favouriteViewModel.favList.first()
-        when(result){
-            is ApiState.Success -> {
-                data = result.data
-            }
-            is ApiState.Failure -> {
-            }
-            else -> {
-            }
-        }
+        alertsViewModel.getAllAlerts()
+        alertsViewModel.alertList.first()
         //Then
-        MatcherAssert.assertThat(data.size , `is` (4))
+        MatcherAssert.assertThat(alertList.size , Is.`is`(7))
     }
 
-
+    @Test
+    fun deleteAlert_deleteItem_decreaseSizeOfList()= runBlockingTest{
+        //Given
+        alertsViewModel.deleteAlert(alertList[0])
+        //When
+        alertsViewModel.getAllAlerts()
+        alertsViewModel.alertList.first()
+        //Then
+        MatcherAssert.assertThat(alertList.size , Is.`is`(5))
+    }
 }

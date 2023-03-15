@@ -40,7 +40,7 @@ class RetrofitInterfaceTest {
 
         val latitude = 30.0
         val longitude = 32.0
-        val appid = "bec88e8dd2446515300a492c3862a10e"
+        val appid = "f112a761188e9c22cdf3eb3a44597b00"
         val units = "metric"
         val lang = "en"
 

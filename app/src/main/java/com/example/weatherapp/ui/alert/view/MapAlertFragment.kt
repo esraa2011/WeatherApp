@@ -216,24 +216,8 @@ open class MapAlertFragment : DialogFragment(), OnMapReadyCallback {
         }
     }
 
-//    fun saveToAlert(
-//        placeName: String
-//    ) {
-//        val alert: AlertDialog.Builder = AlertDialog.Builder(requireActivity())
-//
-//        alert.setTitle("Favorite")
-//        alert.setMessage("Do You want to save ${placeName} on favorite")
-//        alert.setPositiveButton("Save") { _: DialogInterface, _: Int ->
-//
-//            Toast.makeText(requireContext(), "Data has been saved", Toast.LENGTH_SHORT).show()
-//            NavHostFragment.findNavController(this@MapAlertFragment).popBackStack()
-//
-//        }
-//
-//        val dialog = alert.create()
-//        dialog.show()
-//
-//    }
+
+
 fun checkToSave(placeName: String , lat: Double , long: Double) {
     val alert: AlertDialog.Builder = AlertDialog.Builder(requireActivity())
 
@@ -248,25 +232,7 @@ fun checkToSave(placeName: String , lat: Double , long: Double) {
 
 }
 
-//    fun registerObserver(cityName: String, lat: Long, long: Long) {
-//
-//        val navController = findNavController();
-//
-//        val navBackStackEntry = navController.previousBackStackEntry
-//
-//        val observer = LifecycleEventObserver { _, event ->
-//        }
-//        navBackStackEntry?.lifecycle?.addObserver(observer)
-//
-//        viewLifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
-//            if (event == Lifecycle.Event.ON_DESTROY) {
-//                navBackStackEntry?.savedStateHandle?.set("cityName", cityName)
-//                navBackStackEntry?.savedStateHandle?.set("lat", lat)
-//                navBackStackEntry?.savedStateHandle?.set("long", long)
-//                navBackStackEntry?.lifecycle?.removeObserver(observer)
-//            }
-//        })
-//    }
+
 fun registerObserver(cityName:String,lat:Double,long: Double){
 
     val navController = findNavController()

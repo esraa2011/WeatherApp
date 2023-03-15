@@ -30,10 +30,16 @@ class RepositoryTest {
 
         )
     private var alertList: MutableList<AlarmPojo> = mutableListOf<AlarmPojo>(
-        AlarmPojo(12, 13, "1", "2", "wind")
-    )
+        AlarmPojo(12, 13, 12, 12, "egypt"),
+        AlarmPojo(12, 13, 12, 12, "egypt"),
+        AlarmPojo(12, 13, 12, 12, "egypt"),
+        AlarmPojo(12, 13, 12, 12, "egypt"),
+        AlarmPojo(12, 13, 12, 12, "egypt"),
+        AlarmPojo(12, 13, 12, 12, "egypt"),
+
+        )
     private var rootList: MutableList<Root> = mutableListOf<Root>(
-        Root(1, 20.0, 32.0, "mansoura", 55, null, emptyList(), emptyList())
+        Root(1, 20.0, 32.0, "mansoura", 55, null, emptyList(), emptyList(), emptyList())
 
     )
     private lateinit var remoteDataSource: FakeDataSource
@@ -120,7 +126,7 @@ class RepositoryTest {
     @Test
     fun insertCurrentWeather_insertItem_increaseSizeOfList() = runBlockingTest {
         //Given single item of current weather
-        val item = Root(2, 20.0, 32.0, "suze", 55, null, emptyList(), emptyList())
+        val item = Root(2, 20.0, 32.0, "suze", 55, null, emptyList(), emptyList(), emptyList())
 
         //when insert current weather in room in repository
         repository.insertCurrentWeather(item)
@@ -145,9 +151,8 @@ class RepositoryTest {
     @Test
     fun getAlert_Nothing_ReturnAlert() = runBlockingTest {
         //Given
-
-        //When request Alert
-        val result = repository.getAlert().first()
+        // When request Alert
+        val result = repository.getAllAlerts().first()
 
         //Then response is same of fake data
         MatcherAssert.assertThat(result, Is.`is`(alertList))
@@ -157,13 +162,13 @@ class RepositoryTest {
     @Test
     fun insertAlert_InsertItem_IncreaseSize() = runBlockingTest {
         //Given single item of alert
-        val item = AlarmPojo(12, 13, "1", "2", "wind")
+        val item =   AlarmPojo(12, 13, 12, 12,"egypt")
 
         //when insert alert in room in repository
         repository.insertAlert(item)
 
         //Then size of root  list will be 2
-        MatcherAssert.assertThat(alertList.size, Is.`is`(2))
+        MatcherAssert.assertThat(alertList.size, Is.`is`(7))
 
     }
 
@@ -172,11 +177,9 @@ class RepositoryTest {
         //Given
         var item = alertList[0]
         //when delete  alert in room in repository
-        val result = repository.deleteAlert(item)
-        //Then size of alert list will be 0
-        MatcherAssert.assertThat(alertList.size, Is.`is`(0))
-
+        val result = item.id?.let { repository.deleteAlert(it) }
+        //Then size of alert list will be 5
+        MatcherAssert.assertThat(alertList.size, Is.`is`(5))
     }
-
 
 }

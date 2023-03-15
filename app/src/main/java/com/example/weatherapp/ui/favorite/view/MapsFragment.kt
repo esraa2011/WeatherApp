@@ -113,7 +113,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         getLastMLocation()
         mMap = googleMap
         mMap.setOnMapLongClickListener { latLang ->
-            Toast.makeText(requireContext(), "Saved", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), getString(R.string.Saved), Toast.LENGTH_LONG).show()
         }
 
     }
@@ -253,14 +253,14 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     ) {
         val alert: AlertDialog.Builder = AlertDialog.Builder(requireActivity(),R.style.MyDialogTheme)
 
-        alert.setTitle("Favorite")
+        alert.setTitle(getString(R.string.Favorite))
         alert.setMessage("Do You want to save ${placeName} on favorite")
         alert.setIcon(R.drawable.applicatiion_icon)
-        alert.setPositiveButton("Save") { _: DialogInterface, _: Int ->
+        alert.setPositiveButton(getString(R.string.Save)) { _: DialogInterface, _: Int ->
 
             favoriteViewModel.insertFavoriteWeather(favoriteWeatherPlacesModel)
             favoriteViewModel.getAllFavoritePlaces()
-            Toast.makeText(requireContext(), "Data has been saved", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.Data), Toast.LENGTH_SHORT).show()
 
         }
 

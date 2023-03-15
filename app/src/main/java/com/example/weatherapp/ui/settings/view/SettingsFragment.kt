@@ -19,6 +19,7 @@ import com.example.weatherapp.data.models.LocaleManager
 import com.example.weatherapp.data.models.Utility
 import com.example.weatherapp.databinding.FragmentSettingsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 
 
 class SettingsFragment : Fragment() {
@@ -27,20 +28,19 @@ class SettingsFragment : Fragment() {
     lateinit var languageShared: SharedPreferences
     lateinit var unitsShared: SharedPreferences
     lateinit var locationShared: SharedPreferences
-    lateinit var notificationShared: SharedPreferences
+
 
     lateinit var lang: String
     lateinit var unit: String
     lateinit var location: String
-//    lateinit var notification: String
+
+
     var flagLangEng: Boolean = false
     var flagLangArb: Boolean = false
     var flagTempKel: Boolean = false
     var flagTempFeh: Boolean = false
     var flagTempCel: Boolean = false
     var flagGps: Boolean = false
-//    var flagNoticationEn: Boolean = false
-//    var flagLanflagNoticationDis: Boolean = false
 
 
     companion object {
@@ -63,45 +63,41 @@ class SettingsFragment : Fragment() {
         locationShared = requireContext().getSharedPreferences(
             Utility.LOCATION_KEY, Context.MODE_PRIVATE
         )
-//        notificationShared = requireContext().getSharedPreferences(
-//            Utility.NOTIFICATION_KEY,
-//            AppCompatActivity.MODE_PRIVATE
-//        )
 
 
         lang = languageShared.getString(Utility.Language_Key, "en")!!
         unit = unitsShared.getString(Utility.TEMP_KEY, "metric")!!
         location = locationShared.getString(Utility.LOCATION_KEY, "gps")!!
-//        notification = notificationShared.getString(Utility.NOTIFICATION_KEY, "enable")!!
+
 
         settingSaveState()
         changeLanguage()
         changeTemp()
-//        changeNotification()
 
-        val sharedPreferences = requireContext().getSharedPreferences("MySettings",Context.MODE_PRIVATE)
+
+        val sharedPreferences =
+            requireContext().getSharedPreferences("MySettings", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
-        // Return State if radio buttons
-        val isDialogState = sharedPreferences.getBoolean("IsDialog",false)
+        val isDialogState = sharedPreferences.getBoolean("IsDialog", false)
 
-        if (isDialogState){
+        if (isDialogState) {
             binding.rbEnable.isChecked = false
             binding.rbDesable.isChecked = true
-        }else{
+        } else {
             binding.rbEnable.isChecked = true
             binding.rbDesable.isChecked = false
         }
 
-        // Events
+
         binding.rbEnable.setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked){
+            if (isChecked) {
                 editor.putBoolean("IsDialog", false)
                 editor.apply()
             }
         }
         binding.rbDesable.setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked) {
+            if (isChecked) {
                 editor.putBoolean("IsDialog", true)
                 editor.apply()
 
@@ -145,66 +141,66 @@ class SettingsFragment : Fragment() {
         }
 
         binding.save.setOnClickListener {
-            if (flagLangEng) {
-                LocaleManager.setLocale(requireContext())
-                Utility.saveLanguageToSharedPref(
-                    requireContext(),
-                    Utility.Language_Key,
-                    Utility.Language_EN_Value
+            if (Utility.checkForInternet(requireContext())) {
+                if (flagLangEng) {
+                    LocaleManager.setLocale(requireContext())
+                    Utility.saveLanguageToSharedPref(
+                        requireContext(),
+                        Utility.Language_Key,
+                        Utility.Language_EN_Value
+                    )
+                } else if (flagLangArb) {
+                    LocaleManager.setLocale(requireContext())
+                    Utility.saveLanguageToSharedPref(
+                        requireContext(),
+                        Utility.Language_Key,
+                        Utility.Language_AR_Value
+                    )
+                }
+                if (flagTempCel) {
+                    Utility.saveTempToSharedPref(requireContext(), Utility.TEMP_KEY, Utility.METRIC)
+                } else if (flagTempKel) {
+                    Utility.saveTempToSharedPref(
+                        requireContext(),
+                        Utility.TEMP_KEY,
+                        Utility.STANDARD
+                    )
+                } else if (flagTempFeh) {
+                    Utility.saveTempToSharedPref(
+                        requireContext(),
+                        Utility.TEMP_KEY,
+                        Utility.IMPERIAL
+                    )
+
+                }
+                if (flagGps) {
+                    Utility.saveLocationSharedPref(
+                        requireContext(),
+                        Utility.LOCATION_KEY,
+                        Utility.GPS
+                    )
+
+                }
+
+                Navigation.findNavController(root)
+                    .navigate(R.id.action_nav_Settings_to_nav_home)
+
+                requireActivity().recreate()
+            } else {
+                Snackbar.make(
+                    requireView(),
+                    getString(R.string.no_internet_txt),
+                    Snackbar.LENGTH_LONG
                 )
-            } else if (flagLangArb) {
-                LocaleManager.setLocale(requireContext())
-                Utility.saveLanguageToSharedPref(
-                    requireContext(),
-                    Utility.Language_Key,
-                    Utility.Language_AR_Value
-                )
+                    .setAction("Setting", View.OnClickListener {
+                        startActivityForResult(
+                            Intent(
+                                Settings.ACTION_SETTINGS
+                            ), 0
+                        );
+                    }).show()
             }
-            if (flagTempCel) {
-                Utility.saveTempToSharedPref(requireContext(), Utility.TEMP_KEY, Utility.METRIC)
-            } else if (flagTempKel) {
-                Utility.saveTempToSharedPref(
-                    requireContext(),
-                    Utility.TEMP_KEY,
-                    Utility.STANDARD
-                )
-            } else if (flagTempFeh) {
-                Utility.saveTempToSharedPref(
-                    requireContext(),
-                    Utility.TEMP_KEY,
-                    Utility.IMPERIAL
-                )
-
-            }
-            if (flagGps) {
-                Utility.saveLocationSharedPref(
-                    requireContext(),
-                    Utility.LOCATION_KEY,
-                    Utility.GPS
-                )
-
-            }
-//            if (flagNoticationEn) {
-//                Utility.saveNotificationToSharedPref(
-//                    requireContext(),
-//                    Utility.notificationEnable,
-//                    Utility.NOTIFICATION_KEY
-//                )
-//            } else if (flagLanflagNoticationDis) {
-//
-//                Utility.saveNotificationToSharedPref(
-//                    requireContext(),
-//                    Utility.notificationDis,
-//                    Utility.NOTIFICATION_KEY
-//                )
-//            }
-            Navigation.findNavController(root)
-                .navigate(R.id.action_nav_Settings_to_nav_home)
-
-            requireActivity().recreate()
-
         }
-
 
         return root
     }
@@ -215,7 +211,7 @@ class SettingsFragment : Fragment() {
                 checkedButtonId == binding.rbEng.id -> {
 
                     flagLangEng = true
-                    //  LocaleManager.setLocale(requireContext())
+
                     Toast.makeText(
                         requireContext(),
                         getString(R.string.change_to_en_txt),
@@ -225,7 +221,6 @@ class SettingsFragment : Fragment() {
                 checkedButtonId == binding.rbArb.id -> {
 
                     flagLangArb = true
-                    // LocaleManager.setLocale(requireContext())
                     Toast.makeText(
                         requireContext(),
                         getString(R.string.change_to_ar_txt),
@@ -236,22 +231,6 @@ class SettingsFragment : Fragment() {
         }
     }
 
-//    private fun changeNotification() {
-//        binding.notificationGroup.setOnCheckedChangeListener { radioGroup, checkedButtonId ->
-//            when {
-//                checkedButtonId == binding.rbEnable.id -> {
-//                    flagNoticationEn = true
-//
-//                }
-//                checkedButtonId == binding.rbDesable.id -> {
-//                    flagLanflagNoticationDis = true
-//
-//                }
-//
-//            }
-//
-//        }
-//    }
 
     private fun changeTemp() {
 
@@ -329,18 +308,9 @@ class SettingsFragment : Fragment() {
             binding.rbMa.isChecked = true
             binding.rbGps.isChecked = false
         }
-//        if (notification == Utility.notificationEnable) {
-//            binding.rbEnable.isChecked = true
-//            binding.rbDesable.isChecked = false
-//
-//
-//        } else {
-//            binding.rbDesable.isChecked = true
-//            binding.rbEnable.isChecked = false
-//        }
-
 
     }
+
     private fun checkPermissionOfOverlay() {
         // Check if we already  have permission
         if (!Settings.canDrawOverlays(requireContext())) {
@@ -355,7 +325,7 @@ class SettingsFragment : Fragment() {
                         Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + requireContext().applicationContext.packageName)
                     )
-                    startActivityForResult(intent,1)
+                    startActivityForResult(intent, 1)
                     dialog.dismiss()
 
                 }.setNegativeButton("No") { dialog: DialogInterface, _: Int ->

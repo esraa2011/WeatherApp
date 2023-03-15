@@ -3,7 +3,7 @@ package com.example.weatherapp.ui.alert.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.data.models.AlarmPojo
-import com.example.weatherapp.data.repo.Repository
+import com.example.weatherapp.data.repo.RepositoryOperation
 import com.example.weatherapp.ui.home.viewModel.ApiStateRoot
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
-class AlertsViewModel(var repository: Repository) : ViewModel() {
+class AlertsViewModel(var repository: RepositoryOperation) : ViewModel() {
 
 
     private var _alertList = MutableStateFlow<AlertState>(AlertState.loading)

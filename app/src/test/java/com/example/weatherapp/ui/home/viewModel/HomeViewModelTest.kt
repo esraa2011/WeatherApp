@@ -47,16 +47,17 @@ class HomeViewModelTest {
 
         )
     private var alertList: MutableList<AlarmPojo> = mutableListOf<AlarmPojo>(
-        AlarmPojo(12, 13, "1", "2", "wind"),
-        AlarmPojo(12, 13, "1", "2", "wind"),
-        AlarmPojo(12, 13, "1", "2", "wind"),
-        AlarmPojo(12, 13, "1", "2", "wind"),
-        AlarmPojo(12, 13, "1", "2", "wind"),
-        AlarmPojo(12, 13, "1", "2", "wind")
+        AlarmPojo(12, 13, 12, 12,"egypt"),
+        AlarmPojo(12, 13, 12, 12,"egypt"),
+        AlarmPojo(12, 13, 12, 12,"egypt"),
+        AlarmPojo(12, 13, 12, 12,"egypt"),
+        AlarmPojo(12, 13, 12, 12,"egypt"),
+        AlarmPojo(12, 13, 12, 12,"egypt"),
 
-    )
+
+        )
     private var weatherResponse: Root =
-        Root(1, 12.0, 13.0, "asdjadsk", 565, null, emptyList(), emptyList())
+        Root(1, 12.0, 13.0, "asdjadsk", 565, null, emptyList(), emptyList(), emptyList())
 
 
 

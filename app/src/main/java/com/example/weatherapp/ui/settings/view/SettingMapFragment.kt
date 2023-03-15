@@ -21,7 +21,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
 import com.example.weatherapp.R
 import com.example.weatherapp.data.models.Utility
 import com.google.android.gms.common.api.Status
@@ -200,8 +199,7 @@ class SettingMapFragment : Fragment(), OnMapReadyCallback {
                 mMap.addMarker(
                     MarkerOptions().position(latLng).title("Address")
                 )
-//                val geoCoder = Geocoder(requireContext())
-//                val address = geoCoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+
                 var addressGeocoder: Geocoder = Geocoder(requireContext(), Locale.getDefault())
                 try {
                     var myAddress: List<Address> =

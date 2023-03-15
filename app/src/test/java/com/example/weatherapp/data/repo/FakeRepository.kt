@@ -21,6 +21,7 @@ class FakeRepository(
         null,
         emptyList(),
         emptyList(),
+        emptyList()
     )
 ) : RepositoryOperation {
 
@@ -38,17 +39,6 @@ class FakeRepository(
         favoriteList.remove(favoriteWeatherPlacesModel)
     }
 
-    override fun getAlert(): Flow<List<AlarmPojo>> = flow {
-        emit(alertList)
-    }
-
-    override suspend fun insertAlert(alert: AlarmPojo) {
-        alertList.add(alert)
-    }
-
-    override suspend fun deleteAlert(alert: AlarmPojo) {
-        alertList.remove(alert)
-    }
 
     override suspend fun getFavoriteWeather(favoriteWeatherPlacesModel: FavoriteWeatherPlacesModel): Flow<Root> =
         flow {
@@ -73,6 +63,27 @@ class FakeRepository(
     }
 
     override suspend fun getWeather(latLng: LatLng): Flow<Root> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteAlert(id: Int) {
+        alertList.remove(alertList[id])
+    }
+
+    override suspend fun insertAlert(alert: AlarmPojo): Long {
+        alertList.add(alert)
+        return alert.id?.toLong() ?: 0
+    }
+
+    override fun getAllAlerts(): Flow<List<AlarmPojo>> = flow {
+        emit(alertList)
+    }
+
+    override suspend fun getAlert(id: Int): AlarmPojo {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getWeatherAlert(latLng: LatLng): Flow<Root> {
         TODO("Not yet implemented")
     }
 
