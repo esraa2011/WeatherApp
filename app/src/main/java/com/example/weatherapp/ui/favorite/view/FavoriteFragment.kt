@@ -82,6 +82,8 @@ class FavoriteFragment : Fragment() {
 
                         adapter =
                             FavoriteAdapter(it.data, { it ->
+
+
                                 val alert: AlertDialog.Builder =
                                     AlertDialog.Builder(requireActivity(), R.style.MyDialogTheme)
 

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="70dp"
+    android:layout_height="130dp"
+    android:layout_margin="8dp"
+    android:padding="8dp"
+    app:cardBackgroundColor="#A5CBF2"
+    app:cardCornerRadius="10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/itemgrediant">
+
+        <TextView
+            android:id="@+id/timeInTemp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/_12pm"
+            android:textSize="15sp"
+            android:textColor="@color/blue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/hour_img"
+            android:layout_width="48dp"
+            android:layout_height="37dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/img"
+            app:layout_constraintEnd_toEndOf="@+id/timeInTemp"
+            app:layout_constraintStart_toStartOf="@+id/timeInTemp"
+            app:layout_constraintTop_toBottomOf="@+id/timeInTemp" />
+
+        <TextView
+            android:id="@+id/hour_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="21 c"
+            android:textColor="@color/blue"
+            app:layout_constraintEnd_toEndOf="@+id/hour_img"
+            app:layout_constraintHorizontal_bias="0.523"
+            app:layout_constraintStart_toStartOf="@+id/hour_img"
+            app:layout_constraintTop_toBottomOf="@+id/hour_img" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

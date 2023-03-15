@@ -3,7 +3,6 @@ package com.example.weatherapp.ui.favorite.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
-import com.example.weatherapp.data.repo.Repository
 import com.example.weatherapp.data.repo.RepositoryOperation
 import com.example.weatherapp.ui.home.viewModel.ApiStateRoot
 import kotlinx.coroutines.Dispatchers

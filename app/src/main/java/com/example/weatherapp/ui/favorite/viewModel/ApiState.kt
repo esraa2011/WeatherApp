@@ -1,7 +1,6 @@
 package com.example.weatherapp.ui.favorite.viewModel
 
 import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
-import com.example.weatherapp.data.models.Root
 
 sealed class ApiState {
     class Success(val data: List<FavoriteWeatherPlacesModel>) : ApiState()

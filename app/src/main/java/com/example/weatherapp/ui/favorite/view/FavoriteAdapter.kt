@@ -2,17 +2,9 @@ package com.example.weatherapp.ui.favorite.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.example.weatherapp.R
-import com.example.weatherapp.databinding.DailyItemBinding
-import com.example.weatherapp.databinding.FavItemBinding
-import com.example.weatherapp.data.models.Daily
 import com.example.weatherapp.data.models.FavoriteWeatherPlacesModel
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.*
+import com.example.weatherapp.databinding.FavItemBinding
 
 class FavoriteAdapter(
     private var favoriteWeatherPlaces: List<FavoriteWeatherPlacesModel>,
