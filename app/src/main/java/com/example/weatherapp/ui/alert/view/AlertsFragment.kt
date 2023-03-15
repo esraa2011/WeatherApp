@@ -48,7 +48,7 @@ class AlertsFragment : Fragment() {
 
         binding.fabAlert.setOnClickListener { view ->
             Navigation.findNavController(view)
-                .navigate(R.id.action_nav_alerts_to_alertDialogFragment)
+                .navigate(R.id.action_nav_alerts_to_alertDialogFragment3)
         }
 
 

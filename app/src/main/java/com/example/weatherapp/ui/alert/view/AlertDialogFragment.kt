@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.DatePicker
+import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -34,6 +34,7 @@ class AlertDialogFragment : DialogFragment() {
     var lon: Double = 0.0
     var fromTime: Long = 0
     var toTime: Long = 0
+    lateinit var alert: AlarmPojo
 
     companion object {
         fun newInstance() = AlertDialogFragment()
@@ -48,6 +49,15 @@ class AlertDialogFragment : DialogFragment() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        dialog!!.setCanceledOnTouchOutside(false)
+        dialog!!.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,82 +69,21 @@ class AlertDialogFragment : DialogFragment() {
         _binding = FragmentAlertDialogBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+
+
+
+        setInitialData()
         binding.startDay.setOnClickListener {
-            val c = Calendar.getInstance()
-            val year = c.get(Calendar.YEAR)
-            val month = c.get(Calendar.MONTH)
-            val day = c.get(Calendar.DAY_OF_MONTH)
-            val datePickerDialog = DatePickerDialog(
-
-                requireContext(),
-                { view, year, monthOfYear, dayOfMonth ->
-
-                    binding.startDay.text =
-                        (dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year)
-                },
-                year,
-                month,
-                day
-            )
-            val dp: DatePicker = datePickerDialog.getDatePicker()
-
-            dp.minDate = c.timeInMillis
-
-            dp.setMinDate(System.currentTimeMillis() - 1000)
-            datePickerDialog.show()
+            showDatePicker(true)
         }
+
         binding.endDay.setOnClickListener {
-            val c = Calendar.getInstance()
-            val year = c.get(Calendar.YEAR)
-            val month = c.get(Calendar.MONTH)
-            val day = c.get(Calendar.DAY_OF_MONTH)
-            val datePickerDialog = DatePickerDialog(
-
-                requireContext(),
-                { view, year, monthOfYear, dayOfMonth ->
-
-                    binding.endDay.text =
-                        (dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year)
-                },
-                year,
-                month,
-                day
-            )
-            val dp: DatePicker = datePickerDialog.getDatePicker()
-
-            dp.minDate = c.timeInMillis
-
-            dp.setMinDate(System.currentTimeMillis() - 1000)
-            datePickerDialog.show()
+            showDatePicker(false)
         }
 
-        binding.timeStart.setOnClickListener {
-            val currentTime = android.icu.util.Calendar.getInstance()
-            val startHour = currentTime.get(android.icu.util.Calendar.HOUR_OF_DAY)
-            val startMinute = currentTime.get(android.icu.util.Calendar.MINUTE)
-
-            TimePickerDialog(requireContext(), { view, hourOfDay, minute ->
-                fromTime = (TimeUnit.MINUTES.toSeconds(minute.toLong()) + TimeUnit.HOURS.toSeconds(
-                    hourOfDay.toLong()
-                ))
-                fromTime = fromTime.minus(3600L * 2)
-                binding.timeStart.text = "$hourOfDay : $minute "
-
-            }, startHour, startMinute, false).show()
-        }
-        binding.timeEnd.setOnClickListener {
-            val currentTime = android.icu.util.Calendar.getInstance()
-            val startHour = currentTime.get(android.icu.util.Calendar.HOUR_OF_DAY)
-            val startMinute = currentTime.get(android.icu.util.Calendar.MINUTE)
-
-            TimePickerDialog(requireContext(), { view, hourOfDay, minute ->
-                toTime = (TimeUnit.MINUTES.toSeconds(minute.toLong()) + TimeUnit.HOURS.toSeconds(
-                    hourOfDay.toLong()
-                ))
-                toTime = toTime.minus(3600L * 2)
-                binding.timeEnd.text = "$hourOfDay : $minute "
-
-            }, startHour, startMinute, false).show()
+        binding.save.setOnClickListener {
+            viewModel.insertAlert(alert)
+            dialog!!.dismiss()
         }
 
         binding.zone.setOnClickListener { view ->
@@ -163,21 +112,21 @@ class AlertDialogFragment : DialogFragment() {
                 lon = result
             }
 
-        binding.save.setOnClickListener {
-            var alert = AlarmPojo(
-                Utility.dateToLong(binding.startDay.text.toString()),
-                Utility.dateToLong(binding.endDay.text.toString()),
-                (fromTime + 60),
-                (toTime + 60),
-                binding.zone.text.toString(),
-                latitude = lat,
-                longitude = lon
-            )
-            viewModel.insertAlert(alert)
-            NavHostFragment.findNavController(this)
-                .navigate(R.id.nav_alerts)
-
-        }
+//        binding.save.setOnClickListener {
+//            alert = AlarmPojo(
+//                Utility.dateToLong(binding.startDay.text.toString()),
+//                Utility.dateToLong(binding.endDay.text.toString()),
+//                (fromTime + 60),
+//                (toTime + 60),
+//                binding.zone.text.toString(),
+//                latitude = lat,
+//                longitude = lon
+//            )
+//            viewModel.insertAlert(alert)
+//            NavHostFragment.findNavController(this)
+//                .navigate(R.id.nav_alerts)
+//
+//        }
         lifecycleScope.launch {
             viewModel.stateInsetAlert.collectLatest { id ->
                 println(id)
@@ -212,6 +161,92 @@ class AlertDialogFragment : DialogFragment() {
             ExistingPeriodicWorkPolicy.REPLACE,
             periodicWorkRequest
         )
+    }
+
+    private fun showTimePicker(isFrom: Boolean, datePicker: Long) {
+        val rightNow = Calendar.getInstance()
+        val currentHour = rightNow.get(Calendar.HOUR_OF_DAY)
+        val currentMinute = rightNow.get(Calendar.MINUTE)
+        val listener: (TimePicker?, Int, Int) -> Unit =
+            { _: TimePicker?, hour: Int, minute: Int ->
+                val time = TimeUnit.MINUTES.toSeconds(minute.toLong()) +
+                        TimeUnit.HOURS.toSeconds(hour.toLong()) - (3600L * 2)
+                val dateString = dayConverterToString(datePicker, requireContext())
+                val timeString = timeConverterToString(time, requireContext())
+                val text = dateString.plus("\n").plus(timeString)
+                if (isFrom) {
+                    alert.alarmStartTime = time
+                    alert.alarmStartDay = datePicker
+                    binding.startDay.text = text
+                } else {
+                    alert.alarmEndTime = time
+                    alert.alarmEndDay = datePicker
+                    binding.endDay.text = text
+                }
+            }
+
+        val timePickerDialog = TimePickerDialog(
+            requireContext(),
+            listener, currentHour, currentMinute, false
+        )
+
+        timePickerDialog.setTitle("Choose time")
+       // timePickerDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        timePickerDialog.show()
+    }
+
+    private fun showDatePicker(isFrom: Boolean) {
+        val myCalender = Calendar.getInstance()
+        val year = myCalender[Calendar.YEAR]
+        val month = myCalender[Calendar.MONTH]
+        val day = myCalender[Calendar.DAY_OF_MONTH]
+        val myDateListener =
+            DatePickerDialog.OnDateSetListener { view, year, month, day ->
+                if (view.isShown) {
+                    val date = "$day/${month + 1}/$year"
+                    showTimePicker(isFrom, convertDateToLong(date, requireContext()))
+                }
+            }
+        val datePickerDialog = DatePickerDialog(
+            requireContext(),
+            myDateListener, year, month, day
+        )
+        datePickerDialog.setTitle("Choose date")
+      //  datePickerDialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+        datePickerDialog.show()
+    }
+
+    private fun setInitialData() {
+        val rightNow = Calendar.getInstance()
+        // init time
+        val currentHour = TimeUnit.HOURS.toSeconds(rightNow.get(Calendar.HOUR_OF_DAY).toLong())
+        val currentMinute = TimeUnit.MINUTES.toSeconds(rightNow.get(Calendar.MINUTE).toLong())
+        val currentTime = (currentHour + currentMinute).minus(3600L * 2)
+        val currentTimeText = timeConverterToString((currentTime + 60), requireContext())
+        val afterOneHour = currentTime.plus(3600L)
+        val afterOneHourText = timeConverterToString(afterOneHour, requireContext())
+        // init day
+        val year = rightNow.get(Calendar.YEAR)
+        val month = rightNow.get(Calendar.MONTH)
+        val day = rightNow.get(Calendar.DAY_OF_MONTH)
+        val date = "$day/${month + 1}/$year"
+        val dayNow = convertDateToLong(date, requireContext())
+        val currentDate = dayConverterToString(dayNow, requireContext())
+        //init model
+        alert =
+            AlarmPojo(
+
+                alarmStartDay = dayNow,
+                alarmEndDay = dayNow,
+                alarmStartTime = (currentTime + 60),
+                alarmEndTime = afterOneHour,
+                binding.zone.text.toString(),
+                latitude = lat,
+                longitude = lon
+            )
+        //init text
+        binding.startDay.text = currentDate.plus("\n").plus(currentTimeText)
+        binding.endDay.text = currentDate.plus("\n").plus(afterOneHourText)
     }
 
 

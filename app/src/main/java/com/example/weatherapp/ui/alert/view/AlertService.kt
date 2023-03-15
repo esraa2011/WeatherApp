@@ -4,7 +4,10 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.content.ContentResolver
 import android.content.Intent
+import android.media.AudioAttributes
+import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import android.provider.Settings
@@ -68,8 +71,14 @@ class AlertService : Service() {
             val description = getString(R.string.channel_description)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel("$CHANNEL_ID", name, importance)
+            val sound =
+                Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + this.packageName + "/" + R.raw.weather_alert) //Here is FILE_NAME is the name of file that you want to play
+            val attributes = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                .build()
             channel.enableVibration(true)
             channel.description = description
+            channel.setSound(sound, attributes)
             notificationManager = this.getSystemService(NotificationManager::class.java)
             notificationManager?.createNotificationChannel(channel)
         }
